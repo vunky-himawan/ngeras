@@ -1,8 +1,8 @@
 use common::AppState;
-use sqlx::query_as;
+use sqlx::{query, query_as};
 use sqlx_paginated::{PaginatedResponse, QueryParamsBuilder, paginated_query_as};
 
-use crate::v1::roles::roles_dto::{CreateRoleDTO, Role};
+use crate::v1::roles::roles_dto::{CreateOrUpdateRoleDTO, Role};
 
 pub struct RoleRepository<'a> {
     state: &'a AppState,
@@ -54,7 +54,7 @@ impl<'a> RoleRepository<'a> {
         Ok(role)
     }
 
-    pub async fn create_role(&self, new_role: &CreateRoleDTO) -> Result<Role, sqlx::Error> {
+    pub async fn create_role(&self, new_role: &CreateOrUpdateRoleDTO) -> Result<Role, sqlx::Error> {
         let created_role = query_as::<_, Role>(
             "INSERT INTO roles (name, description) VALUES ($1, $2) RETURNING *",
         )
@@ -64,5 +64,31 @@ impl<'a> RoleRepository<'a> {
         .await?;
 
         Ok(created_role)
+    }
+
+    pub async fn update_role(
+        &self,
+        id: i64,
+        new_role: &CreateOrUpdateRoleDTO,
+    ) -> Result<Role, sqlx::Error> {
+        let updated_role = query_as::<_, Role>(
+            "UPDATE roles SET name = $1, description = $2 WHERE id = $3 RETURNING *",
+        )
+        .bind(&new_role.name)
+        .bind(&new_role.description)
+        .bind(id)
+        .fetch_one(&self.state.db)
+        .await?;
+
+        Ok(updated_role)
+    }
+
+    pub async fn delete_role(&self, id: i64) -> Result<(), sqlx::Error> {
+        query("DELETE FROM roles WHERE id = $1")
+            .bind(id)
+            .execute(&self.state.db)
+            .await?;
+
+        Ok(())
     }
 }
