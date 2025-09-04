@@ -1,11 +1,9 @@
-use axum::{Router, routing::get};
-use lib::{Database, axum_init};
-
-async fn create_router(_db: Database) -> Router {
-    Router::new().route("/ping", get(|| async { "pong" }))
-}
+use app::build_routes;
+use lib::axum_init;
 
 #[tokio::main]
 async fn main() {
-    axum_init(create_router).await;
+    println!("🚀 Starting API server...");
+
+    axum_init(build_routes).await;
 }
