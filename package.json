@@ -1,0 +1,28 @@
+{
+  "name": "Learn Rust",
+  "version": "1.0.0",
+  "scripts": {
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vunky-himawan/nguiz.git"
+  },
+  "keywords": [
+    "react",
+    "rust",
+    "axum",
+    "vite",
+    "fsd"
+  ],
+  "author": "Vunky Himawan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vunky-himawan/nguiz/issues"
+  },
+  "homepage": "https://github.com/vunky-himawan/nguiz#readme",
+  "description": "Just simple Quiz Application to learn NestJs and FSD",
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}
