@@ -2,7 +2,9 @@
 members = [
     "app",
     "lib",
-    "config"
+    "config",
+    "utils",
+    "common"
 ]
 resolver = "3"
 
@@ -21,3 +23,4 @@ jsonwebtoken = "9.3.1"
 utoipa-swagger-ui = { version = "9.0.0", features = ["axum"] }
 chrono = "0.4.39"
 dotenvy = "0.15.7"
+sqlx-paginated = { version = "0.2.32", features = ["postgres"] }
