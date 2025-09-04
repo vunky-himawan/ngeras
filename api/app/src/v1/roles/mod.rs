@@ -8,7 +8,7 @@ pub use roles_repository::*;
 
 use axum::{
     Router,
-    routing::{get, post},
+    routing::{delete, get, post, put},
 };
 use common::AppState;
 
@@ -16,7 +16,7 @@ pub async fn roles_routes() -> Router<AppState> {
     Router::new()
         .route("/roles", get(roles_controller::find_many))
         .route("/roles/{id}", get(roles_controller::find))
-        .route("/roles", post(roles_controller::create_role))
-    // .route("/roles/{id}", put(roles_controller::update_role))
-    // .route("/roles/{id}", delete(roles_controller::delete_role))
+        .route("/roles", post(roles_controller::create))
+        .route("/roles/{id}", put(roles_controller::update))
+        .route("/roles/{id}", delete(roles_controller::remove))
 }

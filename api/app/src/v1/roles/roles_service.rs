@@ -8,7 +8,7 @@ use utils::response::{
     formatter::{common_response, paginate_response, success_response},
 };
 
-use crate::v1::roles::{RoleRepository, roles_dto::CreateRoleDTO};
+use crate::v1::roles::{RoleRepository, roles_dto::CreateOrUpdateRoleDTO};
 
 pub struct RoleService;
 
@@ -58,7 +58,7 @@ impl RoleService {
         }
     }
 
-    pub async fn create_role(dto: CreateRoleDTO, state: &AppState) -> Response {
+    pub async fn create_role(dto: CreateOrUpdateRoleDTO, state: &AppState) -> Response {
         let repository = RoleRepository::new(state);
 
         let existing_role = repository.get_role_by_name(dto.name.clone()).await;
@@ -90,6 +90,60 @@ impl RoleService {
 
             Err(_err) => common_response(
                 String::from("Failed to fetch role"),
+                StatusCode::INTERNAL_SERVER_ERROR,
+            )
+            .into_response(),
+        }
+    }
+
+    pub async fn update_role(id: i64, dto: CreateOrUpdateRoleDTO, state: &AppState) -> Response {
+        let repository = RoleRepository::new(state);
+
+        let role_with_duplicate_name = repository.get_role_by_name(dto.name.clone()).await;
+
+        match role_with_duplicate_name {
+            Ok(Some(_role)) => {
+                common_response(String::from("Role already exists"), StatusCode::BAD_REQUEST)
+                    .into_response()
+            }
+
+            Ok(None) => {
+                let updated_role = repository.update_role(id, &dto).await;
+
+                match updated_role {
+                    Ok(role) => success_response(SuccessResponse {
+                        status_code: StatusCode::OK.as_u16(),
+                        message: String::from("Role updated successfully."),
+                        data: role,
+                    })
+                    .into_response(),
+
+                    Err(_err) => common_response(
+                        String::from("Failed to update role"),
+                        StatusCode::INTERNAL_SERVER_ERROR,
+                    )
+                    .into_response(),
+                }
+            }
+            Err(_err) => common_response(
+                String::from("Failed to fetch role"),
+                StatusCode::INTERNAL_SERVER_ERROR,
+            )
+            .into_response(),
+        }
+    }
+
+    pub async fn delete_role(id: i64, state: &AppState) -> Response {
+        let repository = RoleRepository::new(state);
+
+        let deleted_role = repository.delete_role(id).await;
+
+        match deleted_role {
+            Ok(_) => common_response(String::from("Role deleted successfully."), StatusCode::OK)
+                .into_response(),
+
+            Err(_err) => common_response(
+                String::from("Failed to delete role"),
                 StatusCode::INTERNAL_SERVER_ERROR,
             )
             .into_response(),

@@ -16,3 +16,4 @@ serde_json.workspace = true
 sqlx.workspace = true
 sqlx-paginated.workspace = true
 validator = { version = "0.20.0", features = ["derive"] }
+tower-http = { version = "0.6.6", features = ["cors"] }

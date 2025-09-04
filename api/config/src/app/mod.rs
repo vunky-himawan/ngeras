@@ -7,6 +7,7 @@ pub struct AppConfig {
     pub version: String,
     pub port: u16,
     pub host: String,
+    pub url: String,
 }
 
 impl AppConfig {
@@ -21,6 +22,7 @@ impl AppConfig {
                 .parse()
                 .unwrap_or(3000),
             host: env::var("APP_HOST").unwrap_or_else(|_| "localhost".into()),
+            url: env::var("APP_URL").unwrap_or_else(|_| "http://localhost:5173".into()),
         }
     }
 }
