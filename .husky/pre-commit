@@ -1,0 +1,69 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🚀 Running pre-commit checks..."
+
+if git diff --cached --name-only | grep -q "^api/"; then
+  echo "📦 API changes detected, running API checks..."
+  cd api
+
+  # Run Build
+  echo "🛠️ Building API code..."
+  cargo build
+  if [ $? -ne 0 ]; then
+    echo "❌ API build failed"
+    exit 1
+  fi
+
+  cd ..
+fi
+
+# Check if we're in Web directory or have Web changes
+if git diff --cached --name-only | grep -q "^web/"; then
+  echo "🌐 Web changes detected, running Web checks..."
+  cd web
+
+  # Format
+  echo "📝 Formatting Web code..."
+  pnpm format
+  if [ $? -ne 0 ]; then
+    echo "❌ Web formatting failed"
+    exit 1
+  fi
+
+  # Run Check
+  echo "🔍 Checking Web code..."
+  pnpm check
+  if [ $? -ne 0 ]; then
+    echo "❌ Web checks failed"
+    exit 1
+  fi
+
+  # Run linting
+  echo "🔍 Linting Web code..."
+  pnpm lint
+  if [ $? -ne 0 ]; then
+    echo "❌ Web linting failed"
+    exit 1
+  fi
+  
+  # Run type checking
+  echo "🔧 Type checking..."
+  pnpm check:types
+  if [ $? -ne 0 ]; then
+    echo "❌ Type checking failed"
+    exit 1
+  fi
+
+  # Run Build
+  echo "🛠️ Building Web code..."
+  pnpm build
+  if [ $? -ne 0 ]; then
+    echo "❌ Web build failed"
+    exit 1
+  fi
+
+  cd ..
+fi
+
+echo "✅ Pre-commit checks passed!"
