@@ -1,4 +1,4 @@
-use crate::v1::roles::{roles_dto::CreateOrUpdateRoleDTO, roles_service::RoleService};
+use crate::v1::roles::{dto::CreateOrUpdateRoleDTO, service::RoleService};
 use axum::{
     Json,
     extract::{Path, Query, State},

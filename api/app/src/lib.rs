@@ -7,11 +7,13 @@ use axum::{
 };
 
 pub mod v1;
+
 use common::AppState;
 use config::AppConfig;
-use lib::Database;
+use libs::Database;
 use tower_http::cors::CorsLayer;
-pub use v1::create_routes;
+
+pub use v1::*;
 
 pub async fn build_routes(db: Database) -> Router {
     let app_config = AppConfig::new();
