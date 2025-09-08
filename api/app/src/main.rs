@@ -1,5 +1,5 @@
 use app::build_routes;
-use lib::axum_init;
+use libs::axum_init;
 
 #[tokio::main]
 async fn main() {

@@ -4,10 +4,11 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-lib = { path = "../lib" }
+libs = { path = "../libs" }
 config = { path = "../config" }
 utils = { path = "../utils" }
 common = { path = "../common" }
+domain = { path = "../domain" }
 axum.workspace = true
 tokio.workspace = true
 serde.workspace = true

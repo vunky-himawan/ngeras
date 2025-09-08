@@ -8,7 +8,7 @@ use utils::response::{
     formatter::{common_response, paginate_response, success_response},
 };
 
-use crate::v1::roles::{RoleRepository, roles_dto::CreateOrUpdateRoleDTO};
+use crate::v1::roles::{RoleRepository, dto::CreateOrUpdateRoleDTO};
 
 pub struct RoleService;
 

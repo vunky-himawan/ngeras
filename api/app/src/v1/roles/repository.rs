@@ -1,8 +1,9 @@
 use common::AppState;
+use domain::Role;
 use sqlx::{query, query_as};
 use sqlx_paginated::{PaginatedResponse, QueryParamsBuilder, paginated_query_as};
 
-use crate::v1::roles::roles_dto::{CreateOrUpdateRoleDTO, Role};
+use crate::v1::roles::dto::CreateOrUpdateRoleDTO;
 
 pub struct RoleRepository<'a> {
     state: &'a AppState,

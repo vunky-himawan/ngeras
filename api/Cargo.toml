@@ -1,10 +1,11 @@
 [workspace]
 members = [
     "app",
-    "lib",
+    "libs",
     "config",
     "utils",
-    "common"
+    "common",
+    "domain",
 ]
 resolver = "3"
 
@@ -24,3 +25,4 @@ utoipa-swagger-ui = { version = "9.0.0", features = ["axum"] }
 chrono = "0.4.39"
 dotenvy = "0.15.7"
 sqlx-paginated = { version = "0.2.32", features = ["postgres"] }
+thiserror = "2.0.16"
