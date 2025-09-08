@@ -16,9 +16,7 @@ impl RoleService {
     pub async fn find_many(params: BaseParams, state: &AppState) -> Response {
         let repository = RoleRepository::new(state);
 
-        let roles = repository
-            .get_roles_with_pagination(params.page.unwrap_or(1), params.per_page.unwrap_or(10))
-            .await;
+        let roles = repository.get_roles_with_pagination(params).await;
 
         match roles {
             Ok(roles) => {

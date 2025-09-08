@@ -1,4 +1,4 @@
-use common::AppState;
+use common::{AppState, BaseParams};
 use domain::Role;
 use sqlx::{query, query_as};
 use sqlx_paginated::{PaginatedResponse, QueryParamsBuilder, paginated_query_as};
@@ -16,11 +16,11 @@ impl<'a> RoleRepository<'a> {
 
     pub async fn get_roles_with_pagination(
         &self,
-        page: i64,
-        per_page: i64,
+        params: BaseParams,
     ) -> Result<PaginatedResponse<Role>, sqlx::Error> {
         let params = QueryParamsBuilder::<Role>::new()
-            .with_pagination(page, per_page)
+            .with_pagination(params.page.unwrap_or(1), params.per_page.unwrap_or(10))
+            .with_search(params.search.unwrap_or_default(), vec!["name"])
             .build();
 
         let paginated = paginated_query_as!(

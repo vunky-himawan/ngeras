@@ -1,4 +1,4 @@
-use common::AppState;
+use common::{AppState, BaseParams};
 use domain::Permission;
 use sqlx::query_as;
 use sqlx_paginated::{
@@ -16,13 +16,11 @@ impl<'a> PermissionRepository<'a> {
 
     pub async fn get_permissions_with_pagination(
         &self,
-        page: i64,
-        per_page: i64,
-        search: Option<String>,
+        params: BaseParams,
     ) -> Result<PaginatedResponse<Permission>, sqlx::Error> {
         let params = QueryParamsBuilder::<Permission>::new()
-            .with_pagination(page, per_page)
-            .with_search(search.unwrap_or(String::from("")), vec!["name"])
+            .with_pagination(params.page.unwrap_or(1), params.per_page.unwrap_or(10))
+            .with_search(params.search.unwrap_or_default(), vec!["name"])
             .with_sort("id", QuerySortDirection::Ascending)
             .build();
 
