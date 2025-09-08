@@ -16,13 +16,7 @@ impl PermissionService {
     pub async fn find_many(params: BaseParams, state: &AppState) -> Response {
         let repo = PermissionRepository::new(state);
 
-        let result = repo
-            .get_permissions_with_pagination(
-                params.page.unwrap_or(1),
-                params.per_page.unwrap_or(10),
-                params.search,
-            )
-            .await;
+        let result = repo.get_permissions_with_pagination(params).await;
 
         match result {
             Ok(permissions) => {
