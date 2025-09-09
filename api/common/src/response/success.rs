@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SuccessResponse<T: Serialize> {
@@ -7,7 +8,7 @@ pub struct SuccessResponse<T: Serialize> {
     pub data: T,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct PaginationMeta {
     pub page: i64,
     pub page_size: i64,
@@ -15,7 +16,7 @@ pub struct PaginationMeta {
     pub total_pages: i64,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct PaginationResponse<T: Serialize> {
     pub status_code: u16,
     pub message: String,

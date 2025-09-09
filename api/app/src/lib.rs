@@ -13,6 +13,7 @@ use config::AppConfig;
 use libs::Database;
 use tower_http::cors::CorsLayer;
 
+use utoipa_swagger_ui::SwaggerUi;
 pub use v1::*;
 
 pub async fn build_routes(db: Database) -> Router {
@@ -34,6 +35,7 @@ pub async fn build_routes(db: Database) -> Router {
 
     Router::new()
         .nest("/api", create_routes().await)
+        .merge(SwaggerUi::new("/api/v1/docs").url("/api/v1/openapi.json", api_v1_docs_route()))
         .with_state(state)
         .layer(cors_layer)
 }

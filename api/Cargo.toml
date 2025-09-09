@@ -26,3 +26,4 @@ chrono = "0.4.39"
 dotenvy = "0.15.7"
 sqlx-paginated = { version = "0.2.32", features = ["postgres"] }
 thiserror = "2.0.16"
+utoipa = { version = "5.3.1", features = ["axum_extras"] }
