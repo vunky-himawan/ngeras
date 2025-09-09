@@ -10,7 +10,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "
 import { Skeleton } from "@/shared/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import { createContext, useMemo } from "react";
-import { useSidebar } from "../../hooks/use-sidebar";
+import { useSidebar } from "@/shared/hooks/use-sidebar";
 
 export type SidebarContextProps = {
   state: "expanded" | "collapsed";

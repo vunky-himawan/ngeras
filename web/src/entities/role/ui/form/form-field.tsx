@@ -1,16 +1,8 @@
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/ui/form/form";
 import { Input } from "@/shared/ui/input";
 import { Textarea } from "@/shared/ui/textarea";
-// import type { FC } from "react";
 
-// interface Props {
-//   // permissions?: Permission[];
-//   search: string;
-//   onSearchChange: (value: string) => void;
-//   isLoading?: boolean;
-// }
-
-export const UpdateRoleFormFields = () => {
+export const CreateOrUpdateRoleFormFields = () => {
   return (
     <>
       <FormField

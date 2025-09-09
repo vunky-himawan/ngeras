@@ -1,7 +1,7 @@
 import { Loading } from "@/shared/ui/loading";
 import { SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/shared/ui/sheet";
-import { useGetRole } from "../model/store";
-import { useModalStore } from "../model/modal.store";
+import { useGetRole } from "../../model/store";
+import { useModalStore } from "../../model/modal.store";
 
 export const RoleSheetContent = () => {
   const { id } = useModalStore();

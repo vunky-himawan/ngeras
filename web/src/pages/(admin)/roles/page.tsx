@@ -2,14 +2,14 @@ import type { TBreadcrumbItem } from "@/shared/types/breadcrumb";
 import { Button } from "@/shared/ui/button";
 import { AdminPage } from "@/shared/ui/admin/container";
 import { Plus } from "lucide-react";
-import { RolesDataTable } from "@/widgets/roles/table/ui/table";
 import { Sheet } from "@/shared/ui/sheet";
 import { Dialog } from "@/shared/ui/dialog";
-import { UpdateRoleSheetContent } from "@/widgets/roles/update-role-sheet/ui/sheet";
-import { CreateRoleSheetContent } from "@/widgets/roles/create-role-sheet/ui/sheet";
 import { DeleteRoleModal } from "@/features/role/delete/ui/modal";
-import { RoleSheetContent } from "@/entities/role/ui/detail-role-sheet";
+import { RoleSheetContent } from "@/entities/role/ui/sheet/detail-role-sheet";
 import { useModalStore } from "@/entities/role/model/modal.store";
+import { CreateRoleSheetContent } from "@/features/role/create/ui/sheet";
+import { UpdateRoleSheetContent } from "@/features/role/update/ui/sheet";
+import { RolesDataTable } from "@/entities/role/ui/table/table";
 
 const RolesPage = () => {
   const { action, isOpen, onOpenChange } = useModalStore();
