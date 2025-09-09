@@ -35,7 +35,7 @@ impl UserService {
     pub async fn find(id: String, state: &AppState) -> Response {
         let repo = UserRepository::new(state);
 
-        let user = repo.get_user_with_id(id).await;
+        let user = repo.get_user_with_id(&id).await;
 
         match user {
             Ok(user) => match user {
@@ -128,7 +128,37 @@ impl UserService {
         }
     }
 
-    pub async fn delete() {
-        todo!("Implement user deletion")
+    pub async fn delete(id: String, state: &AppState) -> Response {
+        let repo = UserRepository::new(state);
+
+        let existing_user = repo.get_user_with_id(&id).await;
+
+        match existing_user {
+            Ok(Some(_user)) => {
+                let deleted_user = repo.soft_delete(&id).await;
+
+                match deleted_user {
+                    Ok(_) => {
+                        common_response(String::from("User deleted successfully"), StatusCode::OK)
+                            .into_response()
+                    }
+                    Err(_err) => common_response(
+                        String::from("Failed to delete user"),
+                        StatusCode::INTERNAL_SERVER_ERROR,
+                    )
+                    .into_response(),
+                }
+            }
+
+            // User not found
+            Ok(None) => common_response(String::from("User not found"), StatusCode::NOT_FOUND)
+                .into_response(),
+
+            Err(_err) => common_response(
+                String::from("Failed to fetch user"),
+                StatusCode::INTERNAL_SERVER_ERROR,
+            )
+            .into_response(),
+        }
     }
 }

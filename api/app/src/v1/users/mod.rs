@@ -1,6 +1,6 @@
 use axum::{
     Router,
-    routing::{get, post, put},
+    routing::{delete, get, post, put},
 };
 use common::AppState;
 
@@ -15,4 +15,5 @@ pub async fn users_routes() -> Router<AppState> {
         .route("/users", post(controller::create))
         .route("/users/{id}", get(controller::find))
         .route("/users/{id}", put(controller::update))
+        .route("/users/{id}", delete(controller::delete))
 }
