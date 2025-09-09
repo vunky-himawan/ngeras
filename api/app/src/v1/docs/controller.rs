@@ -9,6 +9,9 @@ use utoipa::OpenApi;
         roles::controller::create,
         roles::controller::update,
         roles::controller::remove,
+        permissions::controller::find_many,
+        permissions::controller::find,
+        permissions::controller::update,
     ),
     components(),
     info(title = "My API", version = "1.0.0", description = "API documentation",)
