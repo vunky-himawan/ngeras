@@ -12,4 +12,9 @@ export const ADMIN_MENU_ITEMS: TMenuItem[] = [
     icon: <UserLock />,
     to: "/roles",
   },
+  {
+    label: "Permissions",
+    icon: <UserLock />,
+    to: "/permissions",
+  },
 ];
