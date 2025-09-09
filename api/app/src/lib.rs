@@ -30,6 +30,7 @@ pub async fn build_routes(db: Database) -> Router {
             Method::PUT,
             Method::DELETE,
             Method::OPTIONS,
+            Method::PATCH,
         ])
         .allow_headers([CONTENT_TYPE, AUTHORIZATION]);
 
