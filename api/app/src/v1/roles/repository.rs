@@ -84,8 +84,8 @@ impl<'a> RoleRepository<'a> {
         Ok(updated_role)
     }
 
-    pub async fn delete_role(&self, id: i64) -> Result<(), sqlx::Error> {
-        query("DELETE FROM roles WHERE id = $1")
+    pub async fn soft_delete(&self, id: i64) -> Result<(), sqlx::Error> {
+        query("UPDATE roles SET deleted_at = NOW() WHERE id = $1")
             .bind(id)
             .execute(&self.state.db)
             .await?;
