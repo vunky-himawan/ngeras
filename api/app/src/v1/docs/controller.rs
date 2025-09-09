@@ -12,6 +12,8 @@ use utoipa::OpenApi;
         permissions::controller::find_many,
         permissions::controller::find,
         permissions::controller::update,
+        users::controller::find_many,
+        users::controller::find,
     ),
     components(),
     info(title = "My API", version = "1.0.0", description = "API documentation",)
