@@ -66,16 +66,10 @@ impl PermissionService {
     pub async fn update(id: i64, dto: UpdatePermissionDTO, state: &AppState) -> Response {
         let repo = PermissionRepository::new(state);
 
-        let permission_with_duplicate_name = repo.get_permission_by_id(id).await;
+        let existing_permission = repo.get_permission_by_id(id).await;
 
-        match permission_with_duplicate_name {
-            Ok(Some(_permission)) => common_response(
-                String::from("Permission already exists"),
-                StatusCode::BAD_REQUEST,
-            )
-            .into_response(),
-
-            Ok(None) => {
+        match existing_permission {
+            Ok(Some(_permission)) => {
                 let updated_permission = repo.update_permission(id, dto.description).await;
 
                 match updated_permission {
@@ -93,6 +87,12 @@ impl PermissionService {
                     .into_response(),
                 }
             }
+
+            Ok(None) => {
+                common_response(String::from("Permission not found"), StatusCode::NOT_FOUND)
+                    .into_response()
+            }
+
             Err(_err) => common_response(
                 String::from("Failed to fetch permission"),
                 StatusCode::INTERNAL_SERVER_ERROR,
