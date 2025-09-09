@@ -1,6 +1,6 @@
 use common::{AppState, BaseParams};
 use domain::User;
-use sqlx::query_as;
+use sqlx::{query, query_as};
 use sqlx_paginated::{
     PaginatedResponse, QueryParamsBuilder, QuerySortDirection, paginated_query_as,
 };
@@ -34,7 +34,7 @@ impl<'a> UserRepository<'a> {
         Ok(users)
     }
 
-    pub async fn get_user_with_id(&self, id: String) -> Result<Option<User>, sqlx::Error> {
+    pub async fn get_user_with_id(&self, id: &String) -> Result<Option<User>, sqlx::Error> {
         let user = query_as::<_, User>("SELECT * FROM users WHERE id = $1")
             .bind(id)
             .fetch_optional(&self.state.db)
@@ -85,7 +85,12 @@ impl<'a> UserRepository<'a> {
         Ok(user)
     }
 
-    pub async fn delete(&self) {
-        todo!("Implement user deletion")
+    pub async fn soft_delete(&self, id: &String) -> Result<(), sqlx::Error> {
+        query("UPDATE users SET deleted_at = NOW() WHERE id = $1")
+            .bind(id)
+            .execute(&self.state.db)
+            .await?;
+
+        Ok(())
     }
 }

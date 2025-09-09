@@ -16,6 +16,7 @@ use utoipa::OpenApi;
         users::controller::find,
         users::controller::create,
         users::controller::update,
+        users::controller::delete,
     ),
     components(),
     info(title = "My API", version = "1.0.0", description = "API documentation",)

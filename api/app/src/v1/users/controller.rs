@@ -90,6 +90,17 @@ pub async fn update(
     UserService::update(body, id, &state).await
 }
 
-pub async fn delete() {
-    todo!("Implement user deletion")
+#[utoipa::path(
+    delete,
+    path = "/api/v1/users/{id}",
+    tag = "Users",
+    description = "Delete an existing user",
+    responses(
+        (status = 200, description = "User deleted", body = [SuccessResponse<User>]),
+        (status = 404, description = "User not found", body = [CommonResponse]),
+        (status = 500, description = "Internal server error", body = [CommonResponse]),
+    )
+)]
+pub async fn delete(State(state): State<AppState>, Path(id): Path<String>) -> Response {
+    UserService::delete(id, &state).await
 }
