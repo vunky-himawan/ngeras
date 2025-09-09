@@ -134,7 +134,7 @@ impl RoleService {
     pub async fn delete_role(id: i64, state: &AppState) -> Response {
         let repository = RoleRepository::new(state);
 
-        let deleted_role = repository.delete_role(id).await;
+        let deleted_role = repository.soft_delete(id).await;
 
         match deleted_role {
             Ok(_) => common_response(String::from("Role deleted successfully."), StatusCode::OK)
