@@ -1,28 +1,18 @@
-import { roleQueries } from "@/entities/role/api/queries";
-import { useDeleteRole } from "@/entities/role/model/context";
-import { useRoleTableColumns } from "@/entities/role/ui/column";
-import { useQueryFilters } from "@/features/filter";
-import DeleteRoleDialog from "@/features/role/ui/delete-dialog";
 import type { TBreadcrumbItem } from "@/shared/types/breadcrumb";
 import { Button } from "@/shared/ui/button";
-import { Dialog } from "@/shared/ui/dialog";
-import { DataTable } from "@/shared/ui/table/data-table";
-import { makePagination } from "@/shared/utils/pagination";
-import { AdminPage } from "@/widgets/admin/ui/container";
-import { useQuery } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
+import { AdminPage } from "@/shared/ui/admin/container";
 import { Plus } from "lucide-react";
+import { RolesDataTable } from "@/widgets/roles/table/ui/table";
+import { Sheet } from "@/shared/ui/sheet";
+import { Dialog } from "@/shared/ui/dialog";
+import { UpdateRoleSheetContent } from "@/widgets/roles/update-role-sheet/ui/sheet";
+import { CreateRoleSheetContent } from "@/widgets/roles/create-role-sheet/ui/sheet";
+import { DeleteRoleModal } from "@/features/role/delete/ui/modal";
+import { RoleSheetContent } from "@/entities/role/ui/detail-role-sheet";
+import { useModalStore } from "@/entities/role/model/modal.store";
 
 const RolesPage = () => {
-  const { pagination, handleChange, search } = useQueryFilters();
-  const roleTableColumns = useRoleTableColumns();
-  const { isModalOpen, setIsModalOpen } = useDeleteRole();
-
-  const { data, isLoading } = useQuery(
-    roleQueries.findMany({
-      ...makePagination(pagination),
-    }),
-  );
+  const { action, isOpen, onOpenChange } = useModalStore();
 
   const breadcrumbs: TBreadcrumbItem[] = [
     { label: "Dashboard", path: "/dashboard" },
@@ -30,35 +20,31 @@ const RolesPage = () => {
   ];
 
   return (
-    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+    <Sheet open={isOpen} onOpenChange={(open) => onOpenChange(open)}>
       <AdminPage
         title="Roles Management"
         description="Manage user roles and permissions here."
         breadcrumbs={breadcrumbs}
-        isLoading={isLoading}
         topAction={<TopAction />}
       >
-        <DataTable
-          columns={roleTableColumns}
-          source={data}
-          handleChange={handleChange}
-          search={search}
-          placeholderSearch="Search roles..."
-        />
-        <DeleteRoleDialog />
+        <RolesDataTable />
+        {action === "show" && <RoleSheetContent />}
+        {action === "create" && <CreateRoleSheetContent />}
+        {action === "update" && <UpdateRoleSheetContent />}
+        <Dialog open={action === "delete"} onOpenChange={(open) => onOpenChange(open)}>
+          {action === "delete" && <DeleteRoleModal />}
+        </Dialog>
       </AdminPage>
-    </Dialog>
+    </Sheet>
   );
 };
 
 const TopAction = () => {
   return (
-    <Link to="/roles/create">
-      <Button>
-        Create Role
-        <Plus />
-      </Button>
-    </Link>
+    <Button onClick={() => useModalStore.getState().onOpenChange(true, "create")}>
+      Create Role
+      <Plus />
+    </Button>
   );
 };
 

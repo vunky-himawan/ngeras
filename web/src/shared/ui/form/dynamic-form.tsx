@@ -1,10 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { useForm, type DefaultValues, type Resolver } from "react-hook-form";
 import type { infer as ZodInfer, ZodObject, ZodRawShape } from "zod";
 import { Form } from "./form";
 
-interface Props<TSchema extends ZodObject<ZodRawShape>> {
+export interface DynamicFormProps<TSchema extends ZodObject<ZodRawShape>> {
   readonly children: ReactNode;
   readonly onSubmit: (data: ZodInfer<TSchema>) => void;
   readonly formSchema: TSchema;
@@ -16,15 +16,21 @@ export const DynamicForm = <TSchema extends ZodObject<ZodRawShape>>({
   onSubmit,
   formSchema,
   defaultValues,
-}: Props<TSchema>) => {
+}: DynamicFormProps<TSchema>) => {
   const form = useForm<ZodInfer<TSchema>>({
     resolver: zodResolver(formSchema) as Resolver<ZodInfer<TSchema>>,
     defaultValues: defaultValues as DefaultValues<ZodInfer<TSchema>>,
   });
 
+  useEffect(() => {
+    if (defaultValues) {
+      form.reset(defaultValues);
+    }
+  }, [defaultValues, form]);
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" id="dynamic-form">
         {children}
       </form>
     </Form>

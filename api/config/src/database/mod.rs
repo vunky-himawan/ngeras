@@ -1,3 +1,5 @@
+use std::env;
+
 use dotenvy::dotenv;
 
 pub struct DatabaseConfig {
@@ -8,7 +10,7 @@ impl DatabaseConfig {
     pub fn new() -> Self {
         dotenv().ok();
         Self {
-            url: std::env::var("DATABASE_URL")
+            url: env::var("DATABASE_URL")
                 .unwrap_or_else(|_| "postgres://user:password@localhost:5432/mydatabase".into()),
         }
     }

@@ -13,9 +13,6 @@ import { Route as adminRouteRouteImport } from './routes/(admin)/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as adminRolesIndexRouteImport } from './routes/(admin)/roles/index'
 import { Route as adminDashboardIndexRouteImport } from './routes/(admin)/dashboard/index'
-import { Route as adminRolesCreateIndexRouteImport } from './routes/(admin)/roles/create/index'
-import { Route as adminRolesRoleIdIndexRouteImport } from './routes/(admin)/roles/$roleId/index'
-import { Route as adminRolesRoleIdUpdateIndexRouteImport } from './routes/(admin)/roles/$roleId/update/index'
 
 const adminRouteRoute = adminRouteRouteImport.update({
   id: '/(admin)',
@@ -36,38 +33,16 @@ const adminDashboardIndexRoute = adminDashboardIndexRouteImport.update({
   path: '/dashboard/',
   getParentRoute: () => adminRouteRoute,
 } as any)
-const adminRolesCreateIndexRoute = adminRolesCreateIndexRouteImport.update({
-  id: '/roles/create/',
-  path: '/roles/create/',
-  getParentRoute: () => adminRouteRoute,
-} as any)
-const adminRolesRoleIdIndexRoute = adminRolesRoleIdIndexRouteImport.update({
-  id: '/roles/$roleId/',
-  path: '/roles/$roleId/',
-  getParentRoute: () => adminRouteRoute,
-} as any)
-const adminRolesRoleIdUpdateIndexRoute =
-  adminRolesRoleIdUpdateIndexRouteImport.update({
-    id: '/roles/$roleId/update/',
-    path: '/roles/$roleId/update/',
-    getParentRoute: () => adminRouteRoute,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof adminRouteRouteWithChildren
   '/dashboard': typeof adminDashboardIndexRoute
   '/roles': typeof adminRolesIndexRoute
-  '/roles/$roleId': typeof adminRolesRoleIdIndexRoute
-  '/roles/create': typeof adminRolesCreateIndexRoute
-  '/roles/$roleId/update': typeof adminRolesRoleIdUpdateIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof adminRouteRouteWithChildren
   '/dashboard': typeof adminDashboardIndexRoute
   '/roles': typeof adminRolesIndexRoute
-  '/roles/$roleId': typeof adminRolesRoleIdIndexRoute
-  '/roles/create': typeof adminRolesCreateIndexRoute
-  '/roles/$roleId/update': typeof adminRolesRoleIdUpdateIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -75,36 +50,13 @@ export interface FileRoutesById {
   '/(admin)': typeof adminRouteRouteWithChildren
   '/(admin)/dashboard/': typeof adminDashboardIndexRoute
   '/(admin)/roles/': typeof adminRolesIndexRoute
-  '/(admin)/roles/$roleId/': typeof adminRolesRoleIdIndexRoute
-  '/(admin)/roles/create/': typeof adminRolesCreateIndexRoute
-  '/(admin)/roles/$roleId/update/': typeof adminRolesRoleIdUpdateIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/dashboard'
-    | '/roles'
-    | '/roles/$roleId'
-    | '/roles/create'
-    | '/roles/$roleId/update'
+  fullPaths: '/' | '/dashboard' | '/roles'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/dashboard'
-    | '/roles'
-    | '/roles/$roleId'
-    | '/roles/create'
-    | '/roles/$roleId/update'
-  id:
-    | '__root__'
-    | '/'
-    | '/(admin)'
-    | '/(admin)/dashboard/'
-    | '/(admin)/roles/'
-    | '/(admin)/roles/$roleId/'
-    | '/(admin)/roles/create/'
-    | '/(admin)/roles/$roleId/update/'
+  to: '/' | '/dashboard' | '/roles'
+  id: '__root__' | '/' | '/(admin)' | '/(admin)/dashboard/' | '/(admin)/roles/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -142,44 +94,17 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof adminDashboardIndexRouteImport
       parentRoute: typeof adminRouteRoute
     }
-    '/(admin)/roles/create/': {
-      id: '/(admin)/roles/create/'
-      path: '/roles/create'
-      fullPath: '/roles/create'
-      preLoaderRoute: typeof adminRolesCreateIndexRouteImport
-      parentRoute: typeof adminRouteRoute
-    }
-    '/(admin)/roles/$roleId/': {
-      id: '/(admin)/roles/$roleId/'
-      path: '/roles/$roleId'
-      fullPath: '/roles/$roleId'
-      preLoaderRoute: typeof adminRolesRoleIdIndexRouteImport
-      parentRoute: typeof adminRouteRoute
-    }
-    '/(admin)/roles/$roleId/update/': {
-      id: '/(admin)/roles/$roleId/update/'
-      path: '/roles/$roleId/update'
-      fullPath: '/roles/$roleId/update'
-      preLoaderRoute: typeof adminRolesRoleIdUpdateIndexRouteImport
-      parentRoute: typeof adminRouteRoute
-    }
   }
 }
 
 interface adminRouteRouteChildren {
   adminDashboardIndexRoute: typeof adminDashboardIndexRoute
   adminRolesIndexRoute: typeof adminRolesIndexRoute
-  adminRolesRoleIdIndexRoute: typeof adminRolesRoleIdIndexRoute
-  adminRolesCreateIndexRoute: typeof adminRolesCreateIndexRoute
-  adminRolesRoleIdUpdateIndexRoute: typeof adminRolesRoleIdUpdateIndexRoute
 }
 
 const adminRouteRouteChildren: adminRouteRouteChildren = {
   adminDashboardIndexRoute: adminDashboardIndexRoute,
   adminRolesIndexRoute: adminRolesIndexRoute,
-  adminRolesRoleIdIndexRoute: adminRolesRoleIdIndexRoute,
-  adminRolesCreateIndexRoute: adminRolesCreateIndexRoute,
-  adminRolesRoleIdUpdateIndexRoute: adminRolesRoleIdUpdateIndexRoute,
 }
 
 const adminRouteRouteWithChildren = adminRouteRoute._addFileChildren(

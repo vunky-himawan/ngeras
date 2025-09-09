@@ -1,7 +1,6 @@
 import type { TBaseQueryParams } from "@/shared/types/query-params";
 import { queryOptions } from "@tanstack/react-query";
-import { findMany } from "./find-many";
-import { find } from "./find";
+import { find, findMany } from "./requests";
 
 export const roleQueries = {
   findMany: (params: TBaseQueryParams) =>

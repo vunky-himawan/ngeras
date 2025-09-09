@@ -1,6 +1,6 @@
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import { cn } from "@/shared/lib/utils";
-import { SidebarContext, type SidebarContextProps } from "@/shared/ui/sidebar";
+import { SidebarContext, type SidebarContextProps } from "@/shared/ui/sidebar/sidebar";
 import { TooltipProvider } from "@/shared/ui/tooltip";
 import { useCallback, useEffect, useMemo, useState } from "react";
 

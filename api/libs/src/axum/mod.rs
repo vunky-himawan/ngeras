@@ -19,8 +19,6 @@ where
 
     let router = router_fn(db).await;
 
-    println!("{}:{}", app_config.host, app_config.port);
-
     let addr = format!("{}:{}", app_config.host, app_config.port)
         .parse::<SocketAddr>()
         .expect("Invalid address");

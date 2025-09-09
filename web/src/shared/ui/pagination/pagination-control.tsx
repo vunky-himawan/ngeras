@@ -46,15 +46,15 @@ export const PaginationControl = ({ onPaginationChange, paginationMeta }: Props)
     onPaginationChange(newPage, page_size);
   };
 
-  const renderPageButton = (page: number | string, index: number) => {
-    if (typeof page === "number") {
+  const renderPageButton = (currentPage: number | string, index: number) => {
+    if (typeof currentPage === "number") {
       return (
         <Button
-          variant={page === page ? "default" : "outline"}
+          variant={currentPage === page ? "default" : "outline"}
           className="h-8 w-8"
-          onClick={() => onPaginationChange(page, page_size)}
+          onClick={() => onPaginationChange(currentPage, page_size)}
         >
-          {page}
+          {currentPage}
         </Button>
       );
     }
