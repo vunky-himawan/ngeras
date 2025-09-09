@@ -1,4 +1,7 @@
-use axum::{Router, routing::get};
+use axum::{
+    Router,
+    routing::{get, post, put},
+};
 use common::AppState;
 
 pub mod controller;
@@ -9,5 +12,7 @@ pub mod service;
 pub async fn users_routes() -> Router<AppState> {
     Router::new()
         .route("/users", get(controller::find_many))
+        .route("/users", post(controller::create))
         .route("/users/{id}", get(controller::find))
+        .route("/users/{id}", put(controller::update))
 }

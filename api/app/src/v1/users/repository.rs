@@ -5,6 +5,8 @@ use sqlx_paginated::{
     PaginatedResponse, QueryParamsBuilder, QuerySortDirection, paginated_query_as,
 };
 
+use crate::users::dto::CreateOrUpdateUserDto;
+
 pub struct UserRepository<'a> {
     state: &'a AppState,
 }
@@ -41,12 +43,46 @@ impl<'a> UserRepository<'a> {
         Ok(user)
     }
 
-    pub async fn create(&self) {
-        todo!("Implement user creation")
+    pub async fn get_user_with_email(&self, email: &String) -> Result<Option<User>, sqlx::Error> {
+        let user = query_as::<_, User>("SELECT * FROM users WHERE email = $1")
+            .bind(email)
+            .fetch_optional(&self.state.db)
+            .await?;
+
+        Ok(user)
     }
 
-    pub async fn update(&self) {
-        todo!("Implement user update")
+    pub async fn create(&self, body: &CreateOrUpdateUserDto) -> Result<User, sqlx::Error> {
+        let user = query_as::<_, User>(
+            "INSERT INTO users (name, email, gender, role_id) VALUES ($1, $2, $3, $4) RETURNING *",
+        )
+        .bind(&body.name)
+        .bind(&body.email)
+        .bind(&body.gender)
+        .bind(&body.role_id)
+        .fetch_one(&self.state.db)
+        .await?;
+
+        Ok(user)
+    }
+
+    pub async fn update(
+        &self,
+        id: String,
+        body: &CreateOrUpdateUserDto,
+    ) -> Result<User, sqlx::Error> {
+        let user = query_as::<_, User>(
+            "UPDATE users SET name = $1, email = $2, gender = $3, role_id = $4 WHERE id = $5 RETURNING *",
+        )
+        .bind(&body.name)
+        .bind(&body.email)
+        .bind(&body.gender)
+        .bind(&body.role_id)
+        .bind(id)
+        .fetch_one(&self.state.db)
+        .await?;
+
+        Ok(user)
     }
 
     pub async fn delete(&self) {

@@ -8,7 +8,7 @@ use utils::response::{
     formatter::{common_response, paginate_response, success_response},
 };
 
-use crate::users::repository::UserRepository;
+use crate::users::{dto::CreateOrUpdateUserDto, repository::UserRepository};
 
 pub struct UserService;
 
@@ -56,12 +56,76 @@ impl UserService {
         }
     }
 
-    pub async fn create() {
-        todo!("Implement user creation")
+    pub async fn create(body: CreateOrUpdateUserDto, state: &AppState) -> Response {
+        let repo = UserRepository::new(state);
+
+        let existing_user = repo.get_user_with_email(&body.email).await;
+
+        match existing_user {
+            Ok(Some(_user)) => common_response(
+                String::from("User with this email already exists"),
+                StatusCode::CONFLICT,
+            )
+            .into_response(),
+            Ok(None) => {
+                let user = repo.create(&body).await;
+
+                match user {
+                    Ok(user) => success_response(SuccessResponse {
+                        status_code: StatusCode::CREATED.as_u16(),
+                        message: String::from("User created successfully."),
+                        data: user,
+                    })
+                    .into_response(),
+                    Err(_err) => common_response(
+                        String::from("Failed to create user"),
+                        StatusCode::INTERNAL_SERVER_ERROR,
+                    )
+                    .into_response(),
+                }
+            }
+            Err(_err) => common_response(
+                String::from("Failed to check for existing user"),
+                StatusCode::INTERNAL_SERVER_ERROR,
+            )
+            .into_response(),
+        }
     }
 
-    pub async fn update() {
-        todo!("Implement user update")
+    pub async fn update(body: CreateOrUpdateUserDto, id: String, state: &AppState) -> Response {
+        let repo = UserRepository::new(state);
+
+        let existing_user = repo.get_user_with_email(&body.email).await;
+
+        match existing_user {
+            Ok(Some(_user)) => common_response(
+                String::from("User with this email already exists"),
+                StatusCode::CONFLICT,
+            )
+            .into_response(),
+            Ok(None) => {
+                let updated_user = repo.update(id, &body).await;
+
+                match updated_user {
+                    Ok(user) => success_response(SuccessResponse {
+                        status_code: StatusCode::OK.as_u16(),
+                        message: String::from("User updated successfully."),
+                        data: user,
+                    })
+                    .into_response(),
+                    Err(_err) => common_response(
+                        String::from("Failed to update user"),
+                        StatusCode::INTERNAL_SERVER_ERROR,
+                    )
+                    .into_response(),
+                }
+            }
+            Err(_err) => common_response(
+                String::from("Failed to check for existing user"),
+                StatusCode::INTERNAL_SERVER_ERROR,
+            )
+            .into_response(),
+        }
     }
 
     pub async fn delete() {
