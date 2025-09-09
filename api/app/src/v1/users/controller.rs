@@ -1,4 +1,5 @@
 use axum::{
+    Json,
     extract::{Path, Query, State},
     response::Response,
 };
@@ -8,7 +9,7 @@ use common::{
 };
 use domain::User;
 
-use crate::users::service::UserService;
+use crate::users::{dto::CreateOrUpdateUserDto, service::UserService};
 
 #[utoipa::path(
     get,
@@ -47,12 +48,46 @@ pub async fn find(State(state): State<AppState>, Path(id): Path<String>) -> Resp
     UserService::find(id, &state).await
 }
 
-pub async fn create() {
-    todo!("Implement user creation")
+#[utoipa::path(
+    post,
+    path = "/api/v1/users",
+    tag = "Users",
+    description = "Create a new user",
+    request_body = CreateOrUpdateUserDto,
+    responses(
+        (status = 201, description = "User created", body = [SuccessResponse<User>]),
+        (status = 400, description = "Bad request", body = [CommonResponse]),
+        (status = 409, description = "Conflict - e.g. email already exists", body = [CommonResponse]),
+        (status = 500, description = "Internal server error", body = [CommonResponse]),
+    )
+)]
+pub async fn create(
+    State(state): State<AppState>,
+    Json(body): Json<CreateOrUpdateUserDto>,
+) -> Response {
+    UserService::create(body, &state).await
 }
 
-pub async fn update() {
-    todo!("Implement user update")
+#[utoipa::path(
+    put,
+    path = "/api/v1/users/{id}",
+    tag = "Users",
+    description = "Update an existing user",
+    request_body = CreateOrUpdateUserDto,
+    responses(
+        (status = 200, description = "User updated", body = [SuccessResponse<User>]),
+        (status = 400, description = "Bad request", body = [CommonResponse]),
+        (status = 404, description = "User not found", body = [CommonResponse]),
+        (status = 409, description = "Conflict - e.g. email already exists", body = [CommonResponse]),
+        (status = 500, description = "Internal server error", body = [CommonResponse]),
+    )
+)]
+pub async fn update(
+    State(state): State<AppState>,
+    Path(id): Path<String>,
+    Json(body): Json<CreateOrUpdateUserDto>,
+) -> Response {
+    UserService::update(body, id, &state).await
 }
 
 pub async fn delete() {
