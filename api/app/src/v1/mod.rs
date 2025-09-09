@@ -8,7 +8,6 @@ pub mod roles;
 use common::AppState;
 
 pub use roles::roles_routes;
-use utoipa_swagger_ui::SwaggerUi;
 
 use crate::permissions::permissions_routes;
 
