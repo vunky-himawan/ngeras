@@ -1,7 +1,3 @@
-import {
-  CreateOrUpdateRoleSchema,
-  type TCreateOrUpdateRole,
-} from "@/shared/lib/zod-validations/role/create-or-update-role.schema";
 import { Button } from "@/shared/ui/button";
 import { DynamicForm } from "@/shared/ui/form/dynamic-form";
 import {
@@ -12,23 +8,24 @@ import {
   SheetTitle,
 } from "@/shared/ui/sheet";
 import type { FC, PropsWithChildren } from "react";
+import { UpdatePermissionSchema, type TUpdatePermission } from "../model/update.schema";
 
 interface Props extends PropsWithChildren {
-  onSubmit: (data: TCreateOrUpdateRole) => void;
-  defaultValues?: TCreateOrUpdateRole;
+  onSubmit: (data: TUpdatePermission) => void;
+  defaultValues?: TUpdatePermission;
 }
 
-export const UpdateRoleForm: FC<Props> = ({ children, onSubmit, defaultValues }) => {
+export const UpdatePermissionForm: FC<Props> = ({ children, onSubmit, defaultValues }) => {
   return (
     <DynamicForm
-      formSchema={CreateOrUpdateRoleSchema}
+      formSchema={UpdatePermissionSchema}
       onSubmit={onSubmit}
       defaultValues={defaultValues}
     >
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>{"Update Role"}</SheetTitle>
-          <SheetDescription>"Fill the form to update a new role"</SheetDescription>
+          <SheetTitle>{"Update Permission"}</SheetTitle>
+          <SheetDescription>"Fill the form to update a permission"</SheetDescription>
         </SheetHeader>
         <div className="px-4 space-y-4">{children}</div>
         <SheetFooter>

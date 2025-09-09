@@ -2,7 +2,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/shared/ui/button";
 import { Eye, Pencil, Trash } from "lucide-react";
 import type { Role } from "@/entities/role/model/types";
-import { useModalStore } from "@/entities/role/model/modal.store";
+import { useModalStore } from "@/shared/stores/modal.store";
 
 export const RolesTableColumnFactory = (): ColumnDef<Role>[] => {
   const { onOpenChange } = useModalStore();

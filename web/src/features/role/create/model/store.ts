@@ -3,7 +3,7 @@ import { roleMutations } from "../api/mutations";
 import { useToast } from "@/shared/hooks/use-toast";
 import { queryClient } from "@/shared/lib/tanstack/query-client";
 import { roleQueryKeys } from "@/entities/role/api/queries";
-import { useModalStore } from "@/entities/role/model/modal.store";
+import { useModalStore } from "@/shared/stores/modal.store";
 
 export const useCreateRole = () => {
   const { showToast } = useToast();
@@ -11,13 +11,15 @@ export const useCreateRole = () => {
   return useMutation(
     roleMutations.createRole({
       onSuccess: () => {
-        useModalStore.getState().onOpenChange(false);
+        useModalStore.getState().close();
 
         queryClient.invalidateQueries({ queryKey: roleQueryKeys.all });
 
         showToast("Role created successfully", "success");
       },
       onError: () => {
+        useModalStore.getState().close();
+
         showToast("Failed to create role", "error");
       },
     }),

@@ -7,6 +7,7 @@ interface ModalState {
   id?: number;
   action: ModalAction;
   onOpenChange: (isOpen: boolean, action?: Exclude<ModalAction, null>, id?: number) => void;
+  close: () => void;
 }
 
 export const useModalStore = create<ModalState>((set) => ({
@@ -20,4 +21,5 @@ export const useModalStore = create<ModalState>((set) => ({
       set({ isOpen, action: action ?? null, id });
     }
   },
+  close: () => set({ isOpen: false, action: null, id: undefined }),
 }));

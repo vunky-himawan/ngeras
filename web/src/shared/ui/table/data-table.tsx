@@ -4,9 +4,9 @@ import { Search } from "@/shared/ui/search";
 import type { TFilterItem } from "@/shared/types/filter";
 import { TanstackTableView } from "@/shared/ui/table/tanstack-table-view";
 import type { TSource } from "@/shared/types/pagination";
-import type { TBaseQueryParams } from "@/shared/types/query-params";
 import { PaginationControl } from "@/shared/ui/pagination/pagination-control";
 import { FilterControl } from "@/features/filter";
+import { Loading } from "../loading";
 
 interface IDataTableProps<T> {
   enableRowSelection?: boolean;
@@ -16,13 +16,13 @@ interface IDataTableProps<T> {
   search?: string;
   withSearch?: boolean;
   placeholderSearch?: string;
-  pagination?: Omit<TBaseQueryParams, "search">;
   handleChange?: {
     onFilterChange: (newFilters: Record<string, string | number | undefined>) => void;
     onSortingChange: (sortKey: string, order: "asc" | "desc") => void;
     onPaginationChange: (page: number, per_page: number) => void;
     onSearch: (searchTerm: string) => void;
   };
+  isLoading?: boolean;
 }
 
 export const DataTable = <T,>({
@@ -34,7 +34,7 @@ export const DataTable = <T,>({
   placeholderSearch = "Search...",
   withSearch = true,
   handleChange,
-  pagination,
+  isLoading,
 }: IDataTableProps<T>) => {
   const { data, meta } = source || {};
 
@@ -65,12 +65,6 @@ export const DataTable = <T,>({
     columns: enableRowSelection ? [selectableColumn, ...columns] : columns,
     getCoreRowModel: getCoreRowModel(),
     pageCount: meta?.total_pages,
-    state: {
-      pagination: {
-        pageIndex: pagination?.page || 1,
-        pageSize: pagination?.per_page || 10,
-      },
-    },
     manualPagination: true,
     manualFiltering: true,
     manualSorting: true,
@@ -97,7 +91,7 @@ export const DataTable = <T,>({
 
       {/* Table components */}
       <div className="overflow-hidden rounded-md border my-2">
-        <TanstackTableView table={table} />
+        {isLoading ? <Loading /> : <TanstackTableView table={table} />}
       </div>
 
       {/* Pagination */}

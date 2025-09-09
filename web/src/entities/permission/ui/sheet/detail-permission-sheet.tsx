@@ -1,12 +1,12 @@
 import { Loading } from "@/shared/ui/loading";
 import { SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/shared/ui/sheet";
-import { useGetRole } from "../../model/store";
 import { useModalStore } from "@/shared/stores/modal.store";
+import { useGetPermission } from "../../model/store";
 
-export const RoleSheetContent = () => {
+export const PermissionSheetContent = () => {
   const { id } = useModalStore();
 
-  const { data, isLoading } = useGetRole(id);
+  const { data, isLoading } = useGetPermission(id);
 
   return (
     <SheetContent>
@@ -26,8 +26,8 @@ export const RoleSheetContent = () => {
             <div>{data?.name}</div>
           </div>
           <div>
-            <h1 className="text-foreground font-semibold">Permissions</h1>
-            {/* TODO: display permissions */}
+            <h1 className="text-foreground font-semibold">Description</h1>
+            <p>{data?.description ?? "-"}</p>
           </div>
         </div>
       )}
