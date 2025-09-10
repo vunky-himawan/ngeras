@@ -1,5 +1,5 @@
 import type { TMenuItem } from "@/shared/types/menu";
-import { Settings, UserLock } from "lucide-react";
+import { Lock, Settings, UserCog, UserLock, UsersRound } from "lucide-react";
 
 export const ADMIN_MENU_ITEMS: TMenuItem[] = [
   {
@@ -8,13 +8,24 @@ export const ADMIN_MENU_ITEMS: TMenuItem[] = [
     to: "/dashboard",
   },
   {
-    label: "Roles",
-    icon: <UserLock />,
-    to: "/roles",
-  },
-  {
-    label: "Permissions",
-    icon: <UserLock />,
-    to: "/permissions",
+    label: "User Management",
+    icon: <UserCog />,
+    children: [
+      {
+        label: "Permissions",
+        icon: <Lock />,
+        to: "/permissions",
+      },
+      {
+        label: "Roles",
+        icon: <UserLock />,
+        to: "/roles",
+      },
+      {
+        label: "Users",
+        icon: <UsersRound />,
+        to: "/users",
+      },
+    ],
   },
 ];
