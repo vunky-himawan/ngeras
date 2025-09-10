@@ -20,7 +20,8 @@ impl<'a> RoleRepository<'a> {
     ) -> Result<PaginatedResponse<Role>, sqlx::Error> {
         let params = QueryParamsBuilder::<Role>::new()
             .with_pagination(params.page.unwrap_or(1), params.per_page.unwrap_or(10))
-            .with_search(params.search.unwrap_or_default(), vec!["name"])
+            .with_search(params.search.unwrap_or_default(), vec!["role_name"])
+            .with_sort("role_name", sqlx_paginated::QuerySortDirection::Ascending)
             .build();
 
         let paginated = paginated_query_as!(
@@ -38,7 +39,7 @@ impl<'a> RoleRepository<'a> {
     }
 
     pub async fn get_role_by_id(&self, id: i64) -> Result<Option<Role>, sqlx::Error> {
-        let role = query_as::<_, Role>("SELECT * FROM roles WHERE id = $1")
+        let role = query_as::<_, Role>("SELECT * FROM roles WHERE role_id = $1")
             .bind(id)
             .fetch_optional(&self.state.db) // bedanya fetch_optional bisa return None
             .await?;
@@ -47,7 +48,7 @@ impl<'a> RoleRepository<'a> {
     }
 
     pub async fn get_role_by_name(&self, name: String) -> Result<Option<Role>, sqlx::Error> {
-        let role = query_as::<_, Role>("SELECT * FROM roles WHERE name = $1")
+        let role = query_as::<_, Role>("SELECT * FROM roles WHERE role_name = $1")
             .bind(name)
             .fetch_optional(&self.state.db) // bedanya fetch_optional bisa return None
             .await?;
@@ -57,7 +58,7 @@ impl<'a> RoleRepository<'a> {
 
     pub async fn create_role(&self, new_role: &CreateOrUpdateRoleDTO) -> Result<Role, sqlx::Error> {
         let created_role = query_as::<_, Role>(
-            "INSERT INTO roles (name, description) VALUES ($1, $2) RETURNING *",
+            "INSERT INTO roles (role_name, role_description) VALUES ($1, $2) RETURNING *",
         )
         .bind(&new_role.name)
         .bind(&new_role.description)
@@ -73,7 +74,7 @@ impl<'a> RoleRepository<'a> {
         new_role: &CreateOrUpdateRoleDTO,
     ) -> Result<Role, sqlx::Error> {
         let updated_role = query_as::<_, Role>(
-            "UPDATE roles SET name = $1, description = $2 WHERE id = $3 RETURNING *",
+            "UPDATE roles SET role_name = $1, role_description = $2 WHERE role_id = $3 RETURNING *",
         )
         .bind(&new_role.name)
         .bind(&new_role.description)
@@ -84,8 +85,8 @@ impl<'a> RoleRepository<'a> {
         Ok(updated_role)
     }
 
-    pub async fn soft_delete(&self, id: i64) -> Result<(), sqlx::Error> {
-        query("UPDATE roles SET deleted_at = NOW() WHERE id = $1")
+    pub async fn delete_role(&self, id: i64) -> Result<(), sqlx::Error> {
+        query("DELETE FROM roles WHERE role_id = $1")
             .bind(id)
             .execute(&self.state.db)
             .await?;

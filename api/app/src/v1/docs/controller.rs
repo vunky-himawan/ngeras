@@ -4,11 +4,11 @@ use utoipa::OpenApi;
 #[derive(OpenApi)]
 #[openapi(
     paths(
-        roles::controller::find_many,
-        roles::controller::find,
-        roles::controller::create,
-        roles::controller::update,
-        roles::controller::remove,
+        roles::controller::get_roles,
+        roles::controller::get_role,
+        roles::controller::create_role,
+        roles::controller::update_role,
+        roles::controller::delete_role,
         permissions::controller::find_many,
         permissions::controller::find,
         permissions::controller::update,
