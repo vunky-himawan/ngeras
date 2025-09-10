@@ -25,15 +25,11 @@ impl PermissionService {
                 paginate_response(response).into_response()
             }
 
-            Err(err) => {
-                println!("error: {:?}", err);
-
-                common_response(
-                    String::from("Failed to fetch permissions"),
-                    StatusCode::INTERNAL_SERVER_ERROR,
-                )
-                .into_response()
-            }
+            Err(_err) => common_response(
+                String::from("Failed to fetch permissions"),
+                StatusCode::INTERNAL_SERVER_ERROR,
+            )
+            .into_response(),
         }
     }
 

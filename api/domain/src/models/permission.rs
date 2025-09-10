@@ -4,7 +4,7 @@ use utoipa::ToSchema;
 
 #[derive(Serialize, Debug, Deserialize, Default, FromRow, ToSchema)]
 pub struct Permission {
-    pub id: i64,
-    pub name: String,
-    pub description: Option<String>,
+    pub permission_id: i64,
+    pub permission_name: String,
+    pub permission_description: Option<String>,
 }
