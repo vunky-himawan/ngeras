@@ -21,7 +21,7 @@ impl<'a> PermissionRepository<'a> {
         let params = QueryParamsBuilder::<Permission>::new()
             .with_pagination(params.page.unwrap_or(1), params.per_page.unwrap_or(10))
             .with_search(params.search.unwrap_or_default(), vec!["name"])
-            .with_sort("id", QuerySortDirection::Ascending)
+            .with_sort("permission_id", QuerySortDirection::Ascending)
             .build();
 
         let paginated = paginated_query_as!(
@@ -39,10 +39,11 @@ impl<'a> PermissionRepository<'a> {
     }
 
     pub async fn get_permission_by_id(&self, id: i64) -> Result<Option<Permission>, sqlx::Error> {
-        let permission = query_as::<_, Permission>("SELECT * FROM permissions WHERE id = $1")
-            .bind(id)
-            .fetch_optional(&self.state.db)
-            .await?;
+        let permission =
+            query_as::<_, Permission>("SELECT * FROM permissions WHERE permission_id = $1")
+                .bind(id)
+                .fetch_optional(&self.state.db)
+                .await?;
 
         Ok(permission)
     }
@@ -53,7 +54,7 @@ impl<'a> PermissionRepository<'a> {
         description: Option<String>,
     ) -> Result<Permission, sqlx::Error> {
         let updated_permission = query_as::<_, Permission>(
-            "UPDATE permissions SET description = $1 WHERE id = $2 RETURNING *",
+            "UPDATE permissions SET permission_description = $1 WHERE permission_id = $2 RETURNING *",
         )
         .bind(description)
         .bind(id)

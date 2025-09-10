@@ -29,7 +29,6 @@ pub async fn get_roles(
     State(state): State<AppState>,
     Query(params): Query<BaseParams>,
 ) -> Response {
-    println!("Params: {:?}", params);
     RoleService::find_many(params, &state).await
 }
 
@@ -45,8 +44,6 @@ pub async fn get_roles(
     )
 )]
 pub async fn get_role(State(state): State<AppState>, Path(id): Path<i64>) -> Response {
-    println!("Role Find: {}", id);
-
     RoleService::find(id, &state).await
 }
 
@@ -66,8 +63,6 @@ pub async fn create_role(
     State(state): State<AppState>,
     Json(dto): Json<CreateOrUpdateRoleDTO>,
 ) -> Response {
-    println!("Role Create");
-
     RoleService::create_role(dto, &state).await
 }
 
@@ -89,8 +84,6 @@ pub async fn update_role(
     Path(id): Path<i64>,
     Json(dto): Json<CreateOrUpdateRoleDTO>,
 ) -> Response {
-    println!("Role Update");
-
     RoleService::update_role(id, dto, &state).await
 }
 
@@ -106,7 +99,5 @@ pub async fn update_role(
     )
 )]
 pub async fn delete_role(State(state): State<AppState>, Path(id): Path<i64>) -> Response {
-    println!("Role Remove");
-
     RoleService::delete_role(id, &state).await
 }

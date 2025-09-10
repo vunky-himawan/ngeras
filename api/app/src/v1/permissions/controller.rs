@@ -26,7 +26,7 @@ use crate::permissions::{dto::UpdatePermissionDTO, service::PermissionService};
         (status = 500, description = "Internal server error", body = [common::CommonResponse]),
     )
 )]
-pub async fn find_many(
+pub async fn get_permissions(
     State(state): State<AppState>,
     Query(params): Query<BaseParams>,
 ) -> Response {
@@ -44,15 +44,15 @@ pub async fn find_many(
         (status = 500, description = "Internal server error", body = [common::CommonResponse]),
     )
 )]
-pub async fn find(State(state): State<AppState>, Path(id): Path<i64>) -> Response {
+pub async fn get_permission(State(state): State<AppState>, Path(id): Path<i64>) -> Response {
     PermissionService::find(id, &state).await
 }
 
 #[utoipa::path(
     patch,
-    path = "/api/v1/permissions",
+    path = "/api/v1/permissions/{id}",
     tag = "Permissions",
-    description = "Create a new permission",
+    description = "Update a permission",
     request_body = UpdatePermissionDTO,
     responses(
         (status = 201, description = "Permission created", body = [SuccessResponse<Permission>]),
@@ -60,7 +60,7 @@ pub async fn find(State(state): State<AppState>, Path(id): Path<i64>) -> Respons
         (status = 500, description = "Internal server error", body = [common::CommonResponse]),
     )
 )]
-pub async fn update(
+pub async fn update_permission(
     State(state): State<AppState>,
     Path(id): Path<i64>,
     Json(dto): Json<UpdatePermissionDTO>,

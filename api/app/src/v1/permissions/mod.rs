@@ -11,7 +11,7 @@ use common::AppState;
 
 pub async fn permissions_routes() -> Router<AppState> {
     Router::new()
-        .route("/permissions", get(controller::find_many))
-        .route("/permissions/{id}", get(controller::find))
-        .route("/permissions/{id}", patch(controller::update))
+        .route("/permissions", get(controller::get_permissions))
+        .route("/permissions/{id}", get(controller::get_permission))
+        .route("/permissions/{id}", patch(controller::update_permission))
 }

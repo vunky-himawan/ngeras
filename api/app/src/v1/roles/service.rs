@@ -24,15 +24,11 @@ impl RoleService {
 
                 paginate_response(response).into_response()
             }
-            Err(err) => {
-                println!("Find Many: {:?}", err);
-
-                common_response(
-                    String::from("Failed to fetch roles"),
-                    StatusCode::INTERNAL_SERVER_ERROR,
-                )
-                .into_response()
-            }
+            Err(_err) => common_response(
+                String::from("Failed to fetch roles"),
+                StatusCode::INTERNAL_SERVER_ERROR,
+            )
+            .into_response(),
         }
     }
 
@@ -120,24 +116,18 @@ impl RoleService {
                     })
                     .into_response(),
 
-                    Err(err) => {
-                        println!("Update Role Error: {:?}", err);
-                        common_response(
-                            String::from("Failed to update role"),
-                            StatusCode::INTERNAL_SERVER_ERROR,
-                        )
-                        .into_response()
-                    }
+                    Err(_err) => common_response(
+                        String::from("Failed to update role"),
+                        StatusCode::INTERNAL_SERVER_ERROR,
+                    )
+                    .into_response(),
                 }
             }
-            Err(_err) => {
-                println!("Error fetching role by name: {:?}", _err);
-                common_response(
-                    String::from("Failed to fetch role"),
-                    StatusCode::INTERNAL_SERVER_ERROR,
-                )
-                .into_response()
-            }
+            Err(_err) => common_response(
+                String::from("Failed to fetch role"),
+                StatusCode::INTERNAL_SERVER_ERROR,
+            )
+            .into_response(),
         }
     }
 
