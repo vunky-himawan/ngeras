@@ -8,6 +8,7 @@ use common::{
     success::{PaginationResponse, SuccessResponse},
 };
 use domain::User;
+use sqlx::types::Uuid;
 
 use crate::users::{dto::CreateOrUpdateUserDto, service::UserService};
 
@@ -26,7 +27,7 @@ use crate::users::{dto::CreateOrUpdateUserDto, service::UserService};
         (status = 500, description = "Internal server error", body = [CommonResponse]),
     )
 )]
-pub async fn find_many(
+pub async fn get_users(
     State(state): State<AppState>,
     Query(params): Query<BaseParams>,
 ) -> Response {
@@ -44,7 +45,7 @@ pub async fn find_many(
         (status = 500, description = "Internal server error", body = [CommonResponse]),
     )
 )]
-pub async fn find(State(state): State<AppState>, Path(id): Path<String>) -> Response {
+pub async fn get_user(State(state): State<AppState>, Path(id): Path<Uuid>) -> Response {
     UserService::find(id, &state).await
 }
 
@@ -61,7 +62,7 @@ pub async fn find(State(state): State<AppState>, Path(id): Path<String>) -> Resp
         (status = 500, description = "Internal server error", body = [CommonResponse]),
     )
 )]
-pub async fn create(
+pub async fn create_user(
     State(state): State<AppState>,
     Json(body): Json<CreateOrUpdateUserDto>,
 ) -> Response {
@@ -82,9 +83,9 @@ pub async fn create(
         (status = 500, description = "Internal server error", body = [CommonResponse]),
     )
 )]
-pub async fn update(
+pub async fn update_user(
     State(state): State<AppState>,
-    Path(id): Path<String>,
+    Path(id): Path<Uuid>,
     Json(body): Json<CreateOrUpdateUserDto>,
 ) -> Response {
     UserService::update(body, id, &state).await
@@ -101,6 +102,6 @@ pub async fn update(
         (status = 500, description = "Internal server error", body = [CommonResponse]),
     )
 )]
-pub async fn delete(State(state): State<AppState>, Path(id): Path<String>) -> Response {
+pub async fn delete_user(State(state): State<AppState>, Path(id): Path<Uuid>) -> Response {
     UserService::delete(id, &state).await
 }

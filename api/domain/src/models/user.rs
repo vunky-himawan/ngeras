@@ -1,28 +1,28 @@
-use chrono::NaiveDateTime;
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::{FromRow, Type};
 use utoipa::ToSchema;
+use uuid::Uuid;
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize, ToSchema, FromRow)]
 pub struct User {
-    pub id: String,
-
-    pub name: String,
+    pub user_id: Uuid,
+    pub user_name: String,
+    pub user_email: String,
+    pub user_password: Option<String>,
+    pub user_role_id: i64,
 
     #[schema(example = "Male")]
-    pub gender: Gender,
-
-    pub email: String,
-    pub password: Option<String>,
+    pub user_gender: Gender,
 
     #[schema(value_type = String, format = "date_time", example = "2023-10-05T14:48:00Z")]
-    pub created_at: NaiveDateTime,
+    pub user_created_at: DateTime<Utc>,
 
     #[schema(value_type = String, format = "date_time", example = "2023-10-05T14:48:00Z")]
-    pub updated_at: NaiveDateTime,
+    pub user_updated_at: DateTime<Utc>,
 
     #[schema(value_type = String, format = "date_time", example = "2023-10-05T14:48:00Z")]
-    pub deleted_at: Option<NaiveDateTime>,
+    pub user_deleted_at: Option<DateTime<Utc>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema, Type)]
