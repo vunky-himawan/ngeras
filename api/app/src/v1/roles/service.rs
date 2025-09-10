@@ -24,11 +24,15 @@ impl RoleService {
 
                 paginate_response(response).into_response()
             }
-            Err(_err) => common_response(
-                String::from("Failed to fetch roles"),
-                StatusCode::INTERNAL_SERVER_ERROR,
-            )
-            .into_response(),
+            Err(err) => {
+                println!("Find Many: {:?}", err);
+
+                common_response(
+                    String::from("Failed to fetch roles"),
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                )
+                .into_response()
+            }
         }
     }
 
@@ -116,25 +120,31 @@ impl RoleService {
                     })
                     .into_response(),
 
-                    Err(_err) => common_response(
-                        String::from("Failed to update role"),
-                        StatusCode::INTERNAL_SERVER_ERROR,
-                    )
-                    .into_response(),
+                    Err(err) => {
+                        println!("Update Role Error: {:?}", err);
+                        common_response(
+                            String::from("Failed to update role"),
+                            StatusCode::INTERNAL_SERVER_ERROR,
+                        )
+                        .into_response()
+                    }
                 }
             }
-            Err(_err) => common_response(
-                String::from("Failed to fetch role"),
-                StatusCode::INTERNAL_SERVER_ERROR,
-            )
-            .into_response(),
+            Err(_err) => {
+                println!("Error fetching role by name: {:?}", _err);
+                common_response(
+                    String::from("Failed to fetch role"),
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                )
+                .into_response()
+            }
         }
     }
 
     pub async fn delete_role(id: i64, state: &AppState) -> Response {
         let repository = RoleRepository::new(state);
 
-        let deleted_role = repository.soft_delete(id).await;
+        let deleted_role = repository.delete_role(id).await;
 
         match deleted_role {
             Ok(_) => common_response(String::from("Role deleted successfully."), StatusCode::OK)

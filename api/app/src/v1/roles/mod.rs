@@ -14,9 +14,9 @@ use common::AppState;
 
 pub async fn roles_routes() -> Router<AppState> {
     Router::new()
-        .route("/roles", get(controller::find_many))
-        .route("/roles/{id}", get(controller::find))
-        .route("/roles", post(controller::create))
-        .route("/roles/{id}", put(controller::update))
-        .route("/roles/{id}", delete(controller::remove))
+        .route("/roles", get(controller::get_roles))
+        .route("/roles/{id}", get(controller::get_role))
+        .route("/roles", post(controller::create_role))
+        .route("/roles/{id}", put(controller::update_role))
+        .route("/roles/{id}", delete(controller::delete_role))
 }
