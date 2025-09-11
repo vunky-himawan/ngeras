@@ -1,5 +1,5 @@
 use common::{AppState, BaseParams};
-use domain::User;
+use domain::{User, UserWithRole};
 use sqlx::{query, query_as, types::Uuid};
 use sqlx_paginated::{
     PaginatedResponse, QueryParamsBuilder, QuerySortDirection, paginated_query_as,
@@ -19,7 +19,7 @@ impl<'a> UserRepository<'a> {
     pub async fn get_users_with_pagination(
         &self,
         params: BaseParams,
-    ) -> Result<PaginatedResponse<User>, sqlx::Error> {
+    ) -> Result<PaginatedResponse<UserWithRole>, sqlx::Error> {
         let params = QueryParamsBuilder::new()
             .with_pagination(params.page.unwrap_or(1), params.per_page.unwrap_or(10))
             .with_search(
@@ -29,7 +29,14 @@ impl<'a> UserRepository<'a> {
             .with_sort("user_name", QuerySortDirection::Ascending)
             .build();
 
-        let users = paginated_query_as!(User, r#"SELECT * FROM users"#)
+        let base_query = r#"
+            SELECT 
+                u.*, r.*
+            FROM users u
+            LEFT JOIN roles r ON u.user_role_id = r.role_id
+        "#;
+
+        let users = paginated_query_as!(UserWithRole, base_query)
             .with_params(params)
             .fetch_paginated(&self.state.db)
             .await?;
@@ -37,8 +44,8 @@ impl<'a> UserRepository<'a> {
         Ok(users)
     }
 
-    pub async fn get_user_with_id(&self, id: &Uuid) -> Result<Option<User>, sqlx::Error> {
-        let user = query_as::<_, User>("SELECT * FROM users WHERE user_id = $1")
+    pub async fn get_user_with_id(&self, id: &Uuid) -> Result<Option<UserWithRole>, sqlx::Error> {
+        let user = query_as::<_, UserWithRole>("SELECT u.*, r.* FROM users u LEFT JOIN roles r ON u.user_role_id = r.role_id WHERE u.user_id = $1")
             .bind(id)
             .fetch_optional(&self.state.db)
             .await?;
