@@ -8,7 +8,7 @@ export function useDebounce<Args extends unknown[]>(
 
   return (...args: Args) => {
     if (timeout.current) clearTimeout(timeout.current);
-    timeout.current = window.setTimeout(() => {
+    timeout.current = setTimeout(() => {
       callback(...args);
     }, delay);
   };

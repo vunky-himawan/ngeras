@@ -4,9 +4,13 @@ type ModalAction = "create" | "update" | "delete" | "show" | null;
 
 interface ModalState {
   isOpen: boolean;
-  id?: number;
+  id?: number | string;
   action: ModalAction;
-  onOpenChange: (isOpen: boolean, action?: Exclude<ModalAction, null>, id?: number) => void;
+  onOpenChange: (
+    isOpen: boolean,
+    action?: Exclude<ModalAction, null>,
+    id?: number | string,
+  ) => void;
   close: () => void;
 }
 

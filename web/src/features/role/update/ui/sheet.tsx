@@ -9,13 +9,13 @@ import { memo, type FC } from "react";
 export const UpdateRoleSheetContent: FC = memo(() => {
   const { id } = useModalStore();
 
-  const { data: roleDefault } = useQuery(roleQueries.find(id));
+  const { data: roleDefault } = useQuery(roleQueries.find(id as number));
 
   const { mutate } = useUpdateRole();
 
   return (
     <UpdateRoleForm
-      onSubmit={(data) => mutate({ id: id!, data })}
+      onSubmit={(data) => mutate({ id: id! as number, data })}
       defaultValues={{ name: roleDefault?.name, description: roleDefault?.description }}
     >
       <CreateOrUpdateRoleFormFields />
