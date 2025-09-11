@@ -1,6 +1,6 @@
 import { DataTable } from "@/shared/ui/table/data-table";
 import { UserColumnFactory } from "./column-factory";
-import { useUsers } from "../../model/store";
+import { useGetUsers } from "../../model/store";
 import { useQueryFilters } from "@/features/filter";
 import { makePagination } from "@/shared/utils/pagination";
 
@@ -9,7 +9,7 @@ export const UserDataTable = () => {
 
   const columns = UserColumnFactory();
 
-  const { data, isLoading } = useUsers({
+  const { data, isLoading } = useGetUsers({
     ...makePagination(pagination),
     search,
   });

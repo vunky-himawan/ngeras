@@ -9,13 +9,13 @@ import { UpdatePermissionFormFields } from "@/entities/permission/ui/form/form-f
 export const UpdatePermissionSheetContent: FC = memo(() => {
   const { id } = useModalStore();
 
-  const { data: permissionDefault } = useQuery(permissionQueries.find(id));
+  const { data: permissionDefault } = useQuery(permissionQueries.find(id as number));
 
   const { mutate } = useUpdatePermission();
 
   return (
     <UpdatePermissionForm
-      onSubmit={(data) => mutate({ data, id: id! })}
+      onSubmit={(data) => mutate({ data, id: id! as number })}
       defaultValues={{ description: permissionDefault?.description, name: permissionDefault?.name }}
     >
       <UpdatePermissionFormFields />

@@ -1,7 +1,7 @@
 export type Role = {
-  id: number;
-  name: string;
-  description?: string;
-  createdAt: string;
-  updatedAt: string;
+  role_id: number;
+  role_name: string;
+  role_description?: string;
+  role_created_at: string;
+  role_updated_at: string;
 };

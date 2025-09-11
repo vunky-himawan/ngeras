@@ -32,30 +32,31 @@ export const MenuSidebar: FC<Props> = ({ menuItems, header = "Sidebar" }) => {
             if (item.children?.length) {
               return (
                 <SidebarMenuItem key={item.label}>
-                  <Collapsible className="group/collapsible">
-                    <SidebarMenuItem>
-                      <CollapsibleTrigger asChild>
-                        <SidebarMenuButton>
-                          {item.icon}
-                          {item.label}
-                          <ChevronDown className="ml-auto" />
-                        </SidebarMenuButton>
-                      </CollapsibleTrigger>
-                      <CollapsibleContent>
-                        <SidebarMenuSub>
-                          {item.children.map((child) => (
-                            <SidebarMenuSubItem key={child.label}>
-                              <SidebarMenuButton asChild isActive={checkIsActive(pathName, child)}>
-                                <Link to={child.to?.toString()}>
-                                  {child.icon}
-                                  {child.label}
-                                </Link>
-                              </SidebarMenuButton>
-                            </SidebarMenuSubItem>
-                          ))}
-                        </SidebarMenuSub>
-                      </CollapsibleContent>
-                    </SidebarMenuItem>
+                  <Collapsible
+                    className="group/collapsible"
+                    defaultOpen={item.children.some((child) => checkIsActive(pathName, child))}
+                  >
+                    <CollapsibleTrigger asChild>
+                      <SidebarMenuButton>
+                        {item.icon}
+                        {item.label}
+                        <ChevronDown className="ml-auto" />
+                      </SidebarMenuButton>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <SidebarMenuSub>
+                        {item.children.map((child) => (
+                          <SidebarMenuSubItem key={child.label}>
+                            <SidebarMenuButton asChild isActive={checkIsActive(pathName, child)}>
+                              <Link to={child.to?.toString()}>
+                                {child.icon}
+                                {child.label}
+                              </Link>
+                            </SidebarMenuButton>
+                          </SidebarMenuSubItem>
+                        ))}
+                      </SidebarMenuSub>
+                    </CollapsibleContent>
                   </Collapsible>
                 </SidebarMenuItem>
               );

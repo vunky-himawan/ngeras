@@ -6,7 +6,7 @@ import { useGetPermission } from "../../model/store";
 export const PermissionSheetContent = () => {
   const { id } = useModalStore();
 
-  const { data, isLoading } = useGetPermission(id);
+  const { data, isLoading } = useGetPermission(id as number);
 
   return (
     <SheetContent>

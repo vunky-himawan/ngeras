@@ -37,7 +37,7 @@ export const RolesTableColumnFactory = (): ColumnDef<Role>[] => {
       cell: ({ row }) => (
         <div className="flex gap-2">
           <Button
-            onClick={() => handleAction(row.original.id, "show")}
+            onClick={() => handleAction(row.original.role_id, "show")}
             variant={"ghost"}
             className="text-green-600 hover:text-green-700"
             size={"icon"}
@@ -47,7 +47,7 @@ export const RolesTableColumnFactory = (): ColumnDef<Role>[] => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => handleAction(row.original.id, "update")}
+            onClick={() => handleAction(row.original.role_id, "update")}
             className="text-blue-600 hover:text-blue-700"
           >
             <Pencil />
@@ -55,7 +55,7 @@ export const RolesTableColumnFactory = (): ColumnDef<Role>[] => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => handleAction(row.original.id, "delete")}
+            onClick={() => handleAction(row.original.role_id, "delete")}
             className="text-red-600 hover:text-red-700"
           >
             <Trash />

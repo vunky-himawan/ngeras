@@ -3,6 +3,8 @@ import { Centered } from "@/shared/ui/centered";
 import { Button } from "@/shared/ui/button";
 import "./styles.css";
 import type { AppError } from "@/shared/types/error";
+import { CustomAxiosAppError } from "@/shared/lib/axios/types";
+import { PageNotFound } from "../model/error";
 
 interface IErrorBoundaryProps extends PropsWithChildren {
   error: AppError | null;
@@ -18,6 +20,9 @@ export const ErrorBoundary: FC<IErrorBoundaryProps> = ({
   message,
   onReset,
 }) => {
+  const processedMessage =
+    error instanceof CustomAxiosAppError || PageNotFound ? message : "Something went wrong";
+
   if (!error) {
     return <>{children}</>;
   }
@@ -33,7 +38,7 @@ export const ErrorBoundary: FC<IErrorBoundaryProps> = ({
 
       <div className="relative flex flex-col text-center items-center justify-end gap-3 h-full z-20 max-w-lg max-h-80 p-3">
         <h1 className="text-5xl font-bold md:text-7xl">Oops!</h1>
-        <p className="lg:text-xl">{message}</p>
+        <p className="lg:text-xl">{processedMessage}</p>
         <Button onClick={onReset}>Back</Button>
       </div>
     </Centered>

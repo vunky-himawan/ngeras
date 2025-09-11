@@ -6,7 +6,7 @@ import { useModalStore } from "@/shared/stores/modal.store";
 export const RoleSheetContent = () => {
   const { id } = useModalStore();
 
-  const { data, isLoading } = useGetRole(id);
+  const { data, isLoading } = useGetRole(id as number);
 
   return (
     <SheetContent>
