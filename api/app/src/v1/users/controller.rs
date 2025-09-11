@@ -7,7 +7,7 @@ use common::{
     AppState, BaseParams, CommonResponse,
     success::{PaginationResponse, SuccessResponse},
 };
-use domain::User;
+use domain::{User, UserWithRole};
 use sqlx::types::Uuid;
 
 use crate::users::{dto::CreateOrUpdateUserDto, service::UserService};
@@ -23,7 +23,7 @@ use crate::users::{dto::CreateOrUpdateUserDto, service::UserService};
         ("search" = Option<String>, Query, description = "Search term"),
     ),
     responses(
-        (status = 200, description = "List users", body = [PaginationResponse<User>]),
+        (status = 200, description = "List users", body = [PaginationResponse<UserWithRole>]),
         (status = 500, description = "Internal server error", body = [CommonResponse]),
     )
 )]
@@ -40,7 +40,7 @@ pub async fn get_users(
     tag = "Users",
     description = "Get a user by id",
     responses(
-        (status = 200, description = "User", body = [SuccessResponse<User>]),
+        (status = 200, description = "User", body = [SuccessResponse<UserWithRole>]),
         (status = 404, description = "User not found", body = [CommonResponse]),
         (status = 500, description = "Internal server error", body = [CommonResponse]),
     )

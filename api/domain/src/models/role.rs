@@ -1,9 +1,9 @@
 use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
-use sqlx::prelude::FromRow;
+use sqlx::prelude::{FromRow, Type};
 use utoipa::ToSchema;
 
-#[derive(Debug, Serialize, Deserialize, FromRow, Default, ToSchema, Clone)]
+#[derive(Debug, Serialize, Deserialize, FromRow, Default, ToSchema, Clone, Type)]
 pub struct Role {
     pub role_id: i64,
     pub role_name: String,
