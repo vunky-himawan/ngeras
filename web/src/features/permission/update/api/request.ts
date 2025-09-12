@@ -5,7 +5,5 @@ export const updatePermission = async ({ id, data }: { id: number; data: TUpdate
   delete data.name; // name is not updatable
   const response = await PATCH(`/permissions/${id}`, data);
 
-  console.log("Response:", response);
-
   return response.data;
 };

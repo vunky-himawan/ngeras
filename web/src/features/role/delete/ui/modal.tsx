@@ -8,10 +8,10 @@ import {
 } from "@/shared/ui/dialog";
 import { useDeleteRole } from "../model/store";
 import { Button } from "@/shared/ui/button";
-import { useSearch } from "@tanstack/react-router";
+import { useModalStore } from "@/shared/stores/modal.store";
 
 export const DeleteRoleModal = () => {
-  const { id } = useSearch({ from: "/(admin)/roles/" });
+  const { id } = useModalStore();
 
   const { mutate } = useDeleteRole();
 
@@ -27,7 +27,7 @@ export const DeleteRoleModal = () => {
         <DialogClose asChild>
           <Button variant="outline">Cancel</Button>
         </DialogClose>
-        <Button variant="destructive" onClick={() => mutate({ id })}>
+        <Button variant="destructive" onClick={() => mutate({ id: id! as number })}>
           Delete
         </Button>
       </DialogFooter>

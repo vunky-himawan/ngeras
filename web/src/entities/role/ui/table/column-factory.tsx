@@ -7,30 +7,29 @@ import { useModalStore } from "@/shared/stores/modal.store";
 export const RolesTableColumnFactory = (): ColumnDef<Role>[] => {
   const { onOpenChange } = useModalStore();
 
-  const handleAction = async (id: number, action: "update" | "show" | "delete") => {
+  const handleAction = (id: number, action: "update" | "show" | "delete") => {
     onOpenChange(true, action, id);
   };
 
   return [
     {
-      accessorKey: "name",
+      accessorKey: "role_name",
       header: "Name",
-      cell: ({ row }) => row.getValue("name"),
     },
     {
       accessorKey: "description",
       header: "Description",
-      cell: ({ row }) => row.getValue("description") ?? "-",
+      cell: ({ row }) => row.original.role_description || "-",
     },
     {
       accessorKey: "created_at",
       header: "Created At",
-      cell: ({ row }) => new Date(row.getValue("created_at")).toLocaleDateString(),
+      cell: ({ row }) => new Date(row.original.role_created_at).toLocaleDateString(),
     },
     {
       accessorKey: "updated_at",
       header: "Updated At",
-      cell: ({ row }) => new Date(row.getValue("updated_at")).toLocaleDateString(),
+      cell: ({ row }) => new Date(row.original.role_updated_at).toLocaleDateString(),
     },
     {
       header: "Actions",
