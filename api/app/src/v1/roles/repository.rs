@@ -1,6 +1,6 @@
 use common::{AppState, BaseParams};
 use domain::Role;
-use sqlx::{query, query_as};
+use sqlx::{Postgres, Transaction, query, query_as};
 use sqlx_paginated::{PaginatedResponse, QueryParamsBuilder, paginated_query_as};
 
 use crate::v1::roles::dto::CreateOrUpdateRoleDTO;
@@ -56,14 +56,36 @@ impl<'a> RoleRepository<'a> {
         Ok(role)
     }
 
-    pub async fn create_role(&self, new_role: &CreateOrUpdateRoleDTO) -> Result<Role, sqlx::Error> {
-        let created_role = query_as::<_, Role>(
+    pub async fn create_role_with_permissions(
+        &self,
+        new_role: &CreateOrUpdateRoleDTO,
+    ) -> Result<Role, sqlx::Error> {
+        let mut tx: Transaction<'_, Postgres> = self.state.db.begin().await?;
+
+        let created_role = sqlx::query_as::<_, Role>(
             "INSERT INTO roles (role_name, role_description) VALUES ($1, $2) RETURNING *",
         )
         .bind(&new_role.name)
         .bind(&new_role.description)
-        .fetch_one(&self.state.db)
+        .fetch_one(&mut *tx)
         .await?;
+
+        if let Some(permission_ids) = &new_role.permission_ids {
+            if !permission_ids.is_empty() {
+                sqlx::query(
+                    r#"
+                INSERT INTO role_has_permissions (role_has_permissions_role_id, role_has_permissions_permission_id)
+                SELECT $1, unnest($2::bigint[])
+                "#,
+                )
+                .bind(created_role.role_id)
+                .bind(permission_ids)
+                .execute(&mut *tx)
+                .await?;
+            }
+        }
+
+        tx.commit().await?;
 
         Ok(created_role)
     }
