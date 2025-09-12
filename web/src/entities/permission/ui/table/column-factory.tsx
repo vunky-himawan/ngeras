@@ -12,12 +12,12 @@ export const PermissionColumnFactory = (): ColumnDef<Permission>[] => {
   };
 
   return [
-    { accessorKey: "id", header: "ID" },
-    { accessorKey: "name", header: "Name" },
+    { accessorKey: "permission_id", header: "ID" },
+    { accessorKey: "permission_name", header: "Name" },
     {
-      accessorKey: "description",
+      accessorKey: "permission_description",
       header: "Description",
-      cell: ({ row }) => <span>{row.original.description || "-"}</span>,
+      cell: ({ row }) => <span>{row.original.permission_description || "-"}</span>,
     },
     {
       accessorKey: "actions",
@@ -28,7 +28,7 @@ export const PermissionColumnFactory = (): ColumnDef<Permission>[] => {
             variant={"ghost"}
             size="icon"
             className="text-green-600 hover:text-green-700"
-            onClick={() => handleAction(row.original.id, "show")}
+            onClick={() => handleAction(row.original.permission_id, "show")}
           >
             <Eye />
           </Button>
@@ -36,7 +36,7 @@ export const PermissionColumnFactory = (): ColumnDef<Permission>[] => {
             variant="ghost"
             size="icon"
             className="text-blue-600 hover:text-blue-700"
-            onClick={() => handleAction(row.original.id, "update")}
+            onClick={() => handleAction(row.original.permission_id, "update")}
           >
             <Pencil />
           </Button>

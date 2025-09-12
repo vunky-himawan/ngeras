@@ -12,7 +12,7 @@ export const getPermissions = async (params: TBaseQueryParams): Promise<TSource<
   return makeSource(data);
 };
 
-export const getPermission = async (id: number) => {
+export const getPermission = async (id: number): Promise<Permission> => {
   const response = await GET(`/permissions/${id}`);
 
   const data = response.data;

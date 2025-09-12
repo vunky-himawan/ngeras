@@ -16,7 +16,10 @@ export const UpdatePermissionSheetContent: FC = memo(() => {
   return (
     <UpdatePermissionForm
       onSubmit={(data) => mutate({ data, id: id! as number })}
-      defaultValues={{ description: permissionDefault?.description, name: permissionDefault?.name }}
+      defaultValues={{
+        description: permissionDefault?.permission_description,
+        name: permissionDefault?.permission_name,
+      }}
     >
       <UpdatePermissionFormFields />
     </UpdatePermissionForm>

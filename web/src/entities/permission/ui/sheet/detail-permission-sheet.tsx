@@ -23,11 +23,11 @@ export const PermissionSheetContent = () => {
         <div className="flex flex-col gap-3 px-4">
           <div>
             <h1 className="text-foreground font-semibold">Name</h1>
-            <div>{data?.name}</div>
+            <div>{data?.permission_name}</div>
           </div>
           <div>
             <h1 className="text-foreground font-semibold">Description</h1>
-            <p>{data?.description ?? "-"}</p>
+            <p>{data?.permission_description ?? "-"}</p>
           </div>
         </div>
       )}
