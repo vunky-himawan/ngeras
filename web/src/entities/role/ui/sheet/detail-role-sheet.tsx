@@ -23,11 +23,16 @@ export const RoleSheetContent = () => {
         <div className="flex flex-col gap-3 px-4">
           <div>
             <h1 className="text-foreground font-semibold">Name</h1>
-            <div>{data?.name}</div>
+            <p>{data?.role_name}</p>
+          </div>
+          <div>
+            <h1 className="text-foreground font-semibold">Description</h1>
+            <p>{data?.role_description ?? "-"}</p>
           </div>
           <div>
             <h1 className="text-foreground font-semibold">Permissions</h1>
             {/* TODO: display permissions */}
+            <p>-</p>
           </div>
         </div>
       )}
