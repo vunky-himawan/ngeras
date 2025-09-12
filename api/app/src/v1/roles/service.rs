@@ -93,37 +93,38 @@ impl RoleService {
     pub async fn update_role(id: i64, dto: CreateOrUpdateRoleDTO, state: &AppState) -> Response {
         let repository = RoleRepository::new(state);
 
-        let role_with_duplicate_name = repository.get_role_by_name(dto.name.clone()).await;
+        if let Err(_) = repository.get_role_by_id(id).await {
+            return common_response("Role not found".to_string(), StatusCode::NOT_FOUND)
+                .into_response();
+        }
 
-        match role_with_duplicate_name {
-            Ok(Some(_role)) => {
-                common_response(String::from("Role already exists"), StatusCode::BAD_REQUEST)
-                    .into_response()
-            }
+        if let Ok(Some(_)) = repository.get_role_by_name(dto.name.clone()).await {
+            return common_response("Role already exists".to_string(), StatusCode::BAD_REQUEST)
+                .into_response();
+        }
 
-            Ok(None) => {
-                let updated_role = repository.update_role(id, &dto).await;
+        if let Err(err_msg) = validate_permission_ids(dto.permission_ids.as_ref(), state).await {
+            return common_response(err_msg, StatusCode::BAD_REQUEST).into_response();
+        }
 
-                match updated_role {
-                    Ok(role) => success_response(SuccessResponse {
-                        status_code: StatusCode::OK.as_u16(),
-                        message: String::from("Role updated successfully."),
-                        data: role,
-                    })
-                    .into_response(),
+        let updated_role = repository.update_role_with_permissions(id, &dto).await;
 
-                    Err(_err) => common_response(
-                        String::from("Failed to update role"),
-                        StatusCode::INTERNAL_SERVER_ERROR,
-                    )
-                    .into_response(),
-                }
-            }
-            Err(_err) => common_response(
-                String::from("Failed to fetch role"),
-                StatusCode::INTERNAL_SERVER_ERROR,
-            )
+        match updated_role {
+            Ok(role) => success_response(SuccessResponse {
+                status_code: StatusCode::OK.as_u16(),
+                message: String::from("Role updated successfully."),
+                data: role,
+            })
             .into_response(),
+
+            Err(_err) => {
+                println!("Error updating role : {:?}", _err);
+                common_response(
+                    String::from("Failed to update role"),
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                )
+                .into_response()
+            }
         }
     }
 
