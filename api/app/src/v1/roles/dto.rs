@@ -7,4 +7,5 @@ pub struct CreateOrUpdateRoleDTO {
     #[validate(length(min = 1, message = "Name cannot be empty"))]
     pub name: String,
     pub description: Option<String>,
+    pub permission_ids: Option<Vec<i64>>,
 }

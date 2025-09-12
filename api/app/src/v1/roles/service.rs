@@ -8,7 +8,10 @@ use utils::response::{
     formatter::{common_response, paginate_response, success_response},
 };
 
-use crate::v1::roles::{RoleRepository, dto::CreateOrUpdateRoleDTO};
+use crate::{
+    roles::validation::validate_permission_ids,
+    v1::roles::{RoleRepository, dto::CreateOrUpdateRoleDTO},
+};
 
 pub struct RoleService;
 
@@ -59,38 +62,31 @@ impl RoleService {
     pub async fn create_role(dto: CreateOrUpdateRoleDTO, state: &AppState) -> Response {
         let repository = RoleRepository::new(state);
 
-        let existing_role = repository.get_role_by_name(dto.name.clone()).await;
+        if let Ok(Some(_)) = repository.get_role_by_name(dto.name.clone()).await {
+            return common_response("Role already exists".to_string(), StatusCode::BAD_REQUEST)
+                .into_response();
+        }
 
-        match existing_role {
-            Ok(Some(_role)) => {
-                common_response(String::from("Role already exists"), StatusCode::BAD_REQUEST)
-                    .into_response()
-            }
+        if let Err(err_msg) = validate_permission_ids(dto.permission_ids.as_ref(), state).await {
+            return common_response(err_msg, StatusCode::BAD_REQUEST).into_response();
+        }
 
-            Ok(None) => {
-                let created_role = repository.create_role(&dto).await;
-
-                match created_role {
-                    Ok(role) => success_response(SuccessResponse {
-                        status_code: StatusCode::CREATED.as_u16(),
-                        message: String::from("Role created successfully."),
-                        data: role,
-                    })
-                    .into_response(),
-
-                    Err(_err) => common_response(
-                        String::from("Failed to create role"),
-                        StatusCode::INTERNAL_SERVER_ERROR,
-                    )
-                    .into_response(),
-                }
-            }
-
-            Err(_err) => common_response(
-                String::from("Failed to fetch role"),
-                StatusCode::INTERNAL_SERVER_ERROR,
-            )
+        match repository.create_role_with_permissions(&dto).await {
+            Ok(role) => success_response(SuccessResponse {
+                status_code: StatusCode::CREATED.as_u16(),
+                message: "Role created successfully.".to_string(),
+                data: role,
+            })
             .into_response(),
+
+            Err(error) => {
+                println!("Error creating role : {:?}", error);
+                common_response(
+                    "Failed to create role".to_string(),
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                )
+                .into_response()
+            }
         }
     }
 

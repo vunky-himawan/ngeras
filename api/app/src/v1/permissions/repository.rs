@@ -63,4 +63,15 @@ impl<'a> PermissionRepository<'a> {
 
         Ok(updated_permission)
     }
+
+    pub async fn find_existing_permission_ids(&self, ids: &[i64]) -> Result<Vec<i64>, sqlx::Error> {
+        let existing = sqlx::query_scalar::<_, i64>(
+            "SELECT permission_id FROM permissions WHERE permission_id = ANY($1)",
+        )
+        .bind(ids)
+        .fetch_all(&self.state.db)
+        .await?;
+
+        Ok(existing)
+    }
 }
