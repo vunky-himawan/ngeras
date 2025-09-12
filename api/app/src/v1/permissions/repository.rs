@@ -20,7 +20,7 @@ impl<'a> PermissionRepository<'a> {
     ) -> Result<PaginatedResponse<Permission>, sqlx::Error> {
         let params = QueryParamsBuilder::<Permission>::new()
             .with_pagination(params.page.unwrap_or(1), params.per_page.unwrap_or(10))
-            .with_search(params.search.unwrap_or_default(), vec!["name"])
+            .with_search(params.search.unwrap_or_default(), vec!["permission_name"])
             .with_sort("permission_id", QuerySortDirection::Ascending)
             .build();
 
