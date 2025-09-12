@@ -90,19 +90,48 @@ impl<'a> RoleRepository<'a> {
         Ok(created_role)
     }
 
-    pub async fn update_role(
+    pub async fn update_role_with_permissions(
         &self,
         id: i64,
         new_role: &CreateOrUpdateRoleDTO,
     ) -> Result<Role, sqlx::Error> {
-        let updated_role = query_as::<_, Role>(
-            "UPDATE roles SET role_name = $1, role_description = $2 WHERE role_id = $3 RETURNING *",
+        let mut tx = self.state.db.begin().await?;
+
+        let updated_role = sqlx::query_as::<_, Role>(
+            r#"
+        UPDATE roles
+        SET role_name = $1, role_description = $2
+        WHERE role_id = $3
+        RETURNING *
+        "#,
         )
         .bind(&new_role.name)
         .bind(&new_role.description)
         .bind(id)
-        .fetch_one(&self.state.db)
+        .fetch_one(&mut *tx)
         .await?;
+
+        sqlx::query("DELETE FROM role_has_permissions WHERE role_has_permissions_role_id = $1")
+            .bind(id)
+            .execute(&mut *tx)
+            .await?;
+
+        if let Some(permission_ids) = &new_role.permission_ids {
+            if !permission_ids.is_empty() {
+                sqlx::query(
+                    r#"
+                INSERT INTO role_has_permissions (role_has_permissions_role_id, role_has_permissions_permission_id)
+                SELECT $1, unnest($2::bigint[])
+                "#,
+                )
+                .bind(id)
+                .bind(permission_ids)
+                .execute(&mut *tx)
+                .await?;
+            }
+        }
+
+        tx.commit().await?;
 
         Ok(updated_role)
     }
